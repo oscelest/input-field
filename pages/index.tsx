@@ -25,7 +25,7 @@ const IndexPage: NextPage = () => {
 
   return (
     <div className={Style.Component}>
-      <InputField label={"Hello World"} index={index} value={value} onIndexChange={onIndexChange} onValueChange={onValueChange}>
+      <InputField label={"Hello World"} index={index} input={value} onIndexChange={onIndexChange} onInputChange={onValueChange}>
         <span>Test</span>
         <span>Testeren</span>
         <span>Noxy</span>
