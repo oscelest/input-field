@@ -5,27 +5,31 @@ import React, {useState, useCallback} from "react";
 
 const IndexPage: NextPage = () => {
 
-  const [value, setValue] = useState("");
-  const [index, setIndex] = useState(-1);
+  const [input, setInput] = useState<string>("");
+  const [index, setIndex] = useState<number>(-1);
 
-  const onValueChange = useCallback(
-    (value: string, event: React.ChangeEvent) => {
-      setValue(value);
+  const onInputChange = useCallback((value: string) => setInput(value), [input]);
+  const onIndexChange = useCallback((index: number) => setIndex(index), [index]);
+
+  const onReset = useCallback(
+    () => {
+      setInput("");
+      setIndex(-1);
     },
-    [value]
+    []
   );
 
-  const onIndexChange = useCallback(
-    (index: number) => {
-      console.log(index);
+  const onCommit = useCallback(
+    (input: string, index: number) => {
       setIndex(index);
+      setInput(input);
     },
-    [index]
+    []
   );
 
   return (
     <div className={Style.Component}>
-      <InputField label={"Hello World"} index={index} input={value} onIndexChange={onIndexChange} onInputChange={onValueChange}>
+      <InputField label={"Hello World"} index={index} input={input} onIndexChange={onIndexChange} onInputChange={onInputChange} onReset={onReset} onCommit={onCommit}>
         <span>Test</span>
         <span>Testeren</span>
         <span>Noxy</span>
