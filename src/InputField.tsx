@@ -1,5 +1,5 @@
 import Style from "./InputField.module.scss";
-import React, {useRef, useCallback, CSSProperties, useState} from "react";
+import React, {useRef, useCallback, useState} from "react";
 import InputFieldType from "./InputFieldType";
 
 function InputField(props: InputFieldProps) {
@@ -13,41 +13,22 @@ function InputField(props: InputFieldProps) {
   const type = props.type ?? InputFieldType.TEXT;
   const input = temp_input || props.input;
 
-  const onChange = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) => {
-      const input = event.target.value;
-      props.onInputChange?.(input);
-      props.onIndexChange?.(getIndexFromInput(input, ref_dropdown.current?.children));
-      setTempInput("");
-    },
-    [props.input]
-  );
+  const onComponentBlur = useCallback((event: React.FocusEvent) => setFocusAndDropdown(false), []);
+  const onComponentFocus = useCallback((event: React.FocusEvent) => setFocusAndDropdown(true), []);
+  const onComponentMouseEnter = useCallback((event: React.MouseEvent) => setHover(true), []);
+  const onComponentMouseLeave = useCallback((event: React.MouseEvent) => setHover(false), []);
 
-  const onMouseEnter = useCallback((event: React.MouseEvent) => setHover(true), []);
-  const onMouseLeave = useCallback((event: React.MouseEvent) => setHover(false), []);
-
-  const onDropdownMouseEnter = useCallback((event: React.MouseEvent) => {
-    changeIndex(getIndexOfElement(event.currentTarget));
-  },
-    [props.index]
-  );
-  const onDropdownMouseLeave = useCallback((event: React.MouseEvent) => {
-    props.onIndexChange?.(-1)
-    setTempInput("");
-  }, [props.index]);
-  const onDropdownMouseDown = useCallback((event: React.MouseEvent) => {
-    
+  const onDropdownMouseEnter = useCallback((event: React.MouseEvent) => changeIndex(getIndexOfElement(event.currentTarget)), [props.index]);
+  const onDropdownMouseLeave = useCallback((event: React.MouseEvent) => changeIndex(-1), []);
+  const onDropdownMouseDown = useCallback((event: React.MouseEvent) => event.preventDefault(), []);
+  const onDropdownMouseUp = useCallback((event: React.MouseEvent) => {
+    event.preventDefault();
+    console.log("hello?");
+    commitByIndex(getIndexOfElement(event.currentTarget));
   }, [props.index]);
 
-  const onFocus = useCallback((event: React.FocusEvent) => {
-    setFocusAndDropdown(true);
-  }, []);
-
-  const onBlur = useCallback((event: React.FocusEvent) => {
-    setFocusAndDropdown(false);
-  }, []);
-
-  const onKeyDown = useCallback((event: React.KeyboardEvent) => {
+  const onInputMouseUp = useCallback((event: React.MouseEvent) => event.currentTarget === ref_input.current && setDropdown(true), []);
+  const onInputKeyDown = useCallback((event: React.KeyboardEvent) => {
     switch (event.code) {
       case "Escape":
         ref_input.current?.blur();
@@ -60,13 +41,22 @@ function InputField(props: InputFieldProps) {
         return changeIndex(moveIndex(props.index === undefined || props.index < 0 ? 0 : 1, props.index ?? 0, getDropdownLength()));
       case "Enter":
       case "NumpadEnter":
-        return;
+        return commit();
       case "Tab":
         return commit();
       case "Space":
         return;
     }
   }, [props.index, props.input]);
+  const onInputChange = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      const input = event.target.value;
+      props.onInputChange?.(input);
+      props.onIndexChange?.(getIndexFromInput(input, ref_dropdown.current?.children));
+      setTempInput("");
+    },
+    [props.input]
+  );
 
   const is_focus = hover || focus || props.input;
   const title_class = [Style.Title];
@@ -82,9 +72,9 @@ function InputField(props: InputFieldProps) {
   }
 
   return (
-    <label className={Style.Component} onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave} onFocus={onFocus} onBlur={onBlur}>
+    <label className={Style.Component} onMouseEnter={onComponentMouseEnter} onMouseLeave={onComponentMouseLeave} onFocus={onComponentFocus} onBlur={onComponentBlur}>
       <span className={title_class.join(" ")}>{props.label}</span>
-      <input ref={ref_input} className={input_class.join(" ")} value={input} type={type} onKeyDown={onKeyDown} onChange={onChange} />
+      <input ref={ref_input} className={input_class.join(" ")} value={input} type={type} onMouseUp={onInputMouseUp} onKeyDown={onInputKeyDown} onChange={onInputChange}/>
       <div ref={ref_dropdown} className={dropdown_class.join(" ")} onMouseLeave={onDropdownMouseLeave}>
         {React.Children.map(props.children, renderChild)}
       </div>
@@ -93,17 +83,29 @@ function InputField(props: InputFieldProps) {
 
   function renderChild(child: React.ReactNode, index: number = 0) {
     const classes = [Style.Option];
-    if (index === props.index) classes.push(Style.Active)
+    if (index === props.index) classes.push(Style.Active);
 
     return (
-      <div className={classes.join(" ")} key={index} onMouseDown={onDropdownMouseDown} onMouseEnter={onDropdownMouseEnter}>
+      <div className={classes.join(" ")} key={index} onMouseDown={onDropdownMouseDown} onMouseUp={onDropdownMouseUp} onMouseEnter={onDropdownMouseEnter}>
         {child}
       </div>
     );
   }
 
-  function commit(value: string) {
-    props.onCommit(value, getIndexFromInput(value, ref_dropdown.current?.children));
+  function commitByIndex(index: number) {
+    const input = getInputFromIndex(index, ref_dropdown.current?.children);
+    props.onCommit(input, index);
+    setDropdown(false);
+  }
+
+  function commit(input?: string) {
+    if (props.index && props.index > -1) {
+      props.onCommit(temp_input ?? getInputFromIndex(props.index, ref_dropdown.current?.children), props.index);
+    }
+    else if (input) {
+      props.onCommit(input, getIndexFromInput(input, ref_dropdown.current?.children));
+    }
+    setDropdown(false);
   }
 
   function changeIndex(index: number) {
@@ -112,7 +114,7 @@ function InputField(props: InputFieldProps) {
   }
 
   function getDropdownLength() {
-    return React.Children.toArray(props.children).length
+    return React.Children.toArray(props.children).length;
   }
 
   function setFocusAndDropdown(value: boolean) {
@@ -125,6 +127,11 @@ function moveIndex(offset: number, current_index: number, length: number) {
   current_index = Math.min(length, Math.max(0, current_index));
   offset %= length;
   return (length + current_index + offset) % length;
+}
+
+function getInputFromIndex(index: number, list: HTMLCollection | Array<Element> = []) {
+  if (list instanceof HTMLCollection) list = [...list];
+  return getElementText(list.at(index));
 }
 
 function getIndexFromInput(input: string, list: HTMLCollection | Array<Element> = []) {
