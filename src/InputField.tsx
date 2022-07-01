@@ -12,27 +12,13 @@ function InputField(props: InputFieldProps) {
 
   const onChange = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
-      const value = event.target.value
-      props.onValueChange?.(value, event);
-      if (props.index !== undefined && props.onIndexChange !== undefined) {
-        const dropdown_element_list = getDropdownElementList();
-        if (props.onCompare !== undefined) {
-          for (let i = 0; i < dropdown_element_list.length; i++) {
-            const element = dropdown_element_list.item(i);
-            if (element && props.onCompare(value, i, element)) return props.onIndexChange(i);
-          }
-        }
-        else {
-          for (let i = 0; i < dropdown_element_list.length; i++) {
-            const element = dropdown_element_list.item(i);
-            if (element && element.textContent?.toLowerCase() === value.toLowerCase()) return props.onIndexChange(i);
-          }
-        }
-        props.onIndexChange(-1);
-      }
+      const input = event.target.value;
+      props.onInputChange?.(input, event);
+      props.onIndexChange?.(getIndexFromInput(input));
     },
-    [props.value]
+    [props.input]
   );
+
 
   const onMouseEnter = useCallback((event: React.MouseEvent) => setHover(true), []);
   const onMouseLeave = useCallback((event: React.MouseEvent) => setHover(false), []);
@@ -51,47 +37,68 @@ function InputField(props: InputFieldProps) {
     setFocus(true);
     setDropdown(true);
   }, []);
+
   const onBlur = useCallback((event: React.FocusEvent) => {
     setFocus(false);
     setDropdown(false);
   }, []);
 
-  const is_focus = hover || focus || props.value;
-  const title_style: CSSProperties = {
-    fontSize:   is_focus ? "75%" : "100%",
-    fontFamily: "inherit",
-    transition: "font-size .2s ease-in-out",
-    cursor:     "text"
-  };
+  const onKeyDown = useCallback((event: React.KeyboardEvent) => {
+    const element = getInputElement();
+    switch(event.code) {
+      case "Escape":
+        element.blur();
+        return;
+      case "ArrowUp":
+        return;
+      case "ArrowDown":
+        return;
+      case "Enter":
+      case "NumpadEnter":
+        return;
+      case "Tab":
+        element.blur();
+        return;
+    }
+  }, []);
 
-  const input_style: CSSProperties = {
-    padding:    "0",
-    border:     "none",
-    background: "transparent",
-    outline:    "none",
-    fontSize:   is_focus ? "100%" : "0.1px",
-    fontFamily: "inherit",
-    transition: "font-size .2s ease-in-out"
-  };
+  const is_focus = hover || focus || props.input;
+  const title_class = [Style.Title];
+  const input_class = [Style.Input];
+  if (is_focus) {
+    title_class.push(Style.Active);
+    input_class.push(Style.Active);
+  }
 
-  const dropdown_style: CSSProperties = {
-    display:  dropdown ? "flex" : "none",
-    flexFlow: "column",
-    position: "absolute",
-    top:      "100%",
-    border:   "inherit",
-    width:    "100%"
-  };
+  const dropdown_class = [Style.Dropdown];
+  if (dropdown) {
+    dropdown_class.push(Style.Active);
+  }
 
   return (
     <label ref={ref_element} className={Style.Component} onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave} onFocus={onFocus} onBlur={onBlur}>
-      <span style={title_style}>{props.label}</span>
-      <input type={type} onChange={onChange} style={input_style}/>
-      <div style={dropdown_style} onMouseLeave={onDropdownMouseLeave}>
+      <span className={title_class.join(" ")}>{props.label}</span>
+      <input className={input_class.join(" ")} type={type} onKeyDown={onKeyDown} onChange={onChange}/>
+      <div className={dropdown_class.join(" ")} onMouseLeave={onDropdownMouseLeave}>
         {React.Children.map(props.children, renderChild)}
       </div>
     </label>
   );
+
+  function getIndexFromInput(input: string) {
+    const comparator = props.onCompare ?? compareInputToElement;
+    const dropdown_element_list = getDropdownElementList();
+    for (let i = 0; i < dropdown_element_list.length; i++) {
+      const element = dropdown_element_list.item(i);
+      if (element && comparator(input, i, element)) return i;
+    }
+    return -1;
+  }
+
+  function getInputElement() {
+    if (!ref_element.current) throw new Error();
+    return ref_element.current.children[ref_element.current.children.length - 2] as HTMLInputElement;
+  }
 
   function getDropdownElementList() {
     if (!ref_element.current) throw new Error();
@@ -99,29 +106,34 @@ function InputField(props: InputFieldProps) {
   }
 
   function renderChild(child: React.ReactNode, index: number = 0) {
-    const style: CSSProperties = {
-      cursor:     "pointer",
-      background: index === props.index ? "blue" : "transparent"
-    };
+    const classes = [Style.Option];
+    if (index === props.index) classes.push(Style.Active)
 
     return (
-      <div key={index} style={style} onMouseEnter={onDropdownMouseEnter}>
+      <div className={classes.join(" ")} key={index} onMouseEnter={onDropdownMouseEnter}>
         {child}
       </div>
     );
   }
 }
 
+function compareInputToElement(input: string, index: number, element: Element) {
+  return input.toLowerCase() === element.textContent?.toLowerCase();
+}
+
 export interface InputFieldProps extends React.PropsWithChildren {
   type?: InputFieldType;
   index?: number;
-  value?: string;
+  input?: string;
   className?: string;
   label?: string;
+  strict?: boolean;
 
-  onCompare?(input: string, index: number, element: Element ): boolean;
+  onReset?(): void;
+  onCommit(input: string, index: number): void;
+  onCompare?(input: string, index: number, element: Element): boolean;
   onIndexChange?(index: number): void;
-  onValueChange?(input: string, event: React.ChangeEvent): void;
+  onInputChange?(input: string, event: React.ChangeEvent): void;
 
 
 }
