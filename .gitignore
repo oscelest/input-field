@@ -6,5 +6,6 @@
 
 .env
 .idea
+.vs
 
 npm-debug.log*
