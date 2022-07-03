@@ -21,6 +21,7 @@ const IndexPage: NextPage = () => {
 
   const onCommit = useCallback(
     (input: string, index: number) => {
+      console.log(input, index);
       setIndex(index);
       setInput(input);
     },

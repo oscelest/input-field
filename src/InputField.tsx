@@ -7,6 +7,8 @@ function InputField(props: InputFieldProps) {
   const [focus, setFocus] = useState<boolean>(false);
   const [dropdown, setDropdown] = useState<boolean>(false);
   const [temp_input, setTempInput] = useState<string>("");
+  const ref_collapsed = useRef<boolean>();
+  ref_collapsed.current = !dropdown;
 
   const ref_input = useRef<HTMLInputElement>(null);
   const ref_dropdown = useRef<HTMLDivElement>(null);
@@ -23,31 +25,75 @@ function InputField(props: InputFieldProps) {
   const onDropdownMouseDown = useCallback((event: React.MouseEvent) => event.preventDefault(), []);
   const onDropdownMouseUp = useCallback((event: React.MouseEvent) => {
     event.preventDefault();
-    console.log("hello?");
     commitByIndex(getIndexOfElement(event.currentTarget));
   }, [props.index]);
 
   const onInputMouseUp = useCallback((event: React.MouseEvent) => event.currentTarget === ref_input.current && setDropdown(true), []);
+
   const onInputKeyDown = useCallback((event: React.KeyboardEvent) => {
     switch (event.code) {
-      case "Escape":
-        ref_input.current?.blur();
-        return;
       case "ArrowUp":
         event.preventDefault();
+        setDropdown(true);
         return changeIndex(moveIndex(-1, props.index ?? 0, getDropdownLength()));
       case "ArrowDown":
         event.preventDefault();
+        setDropdown(true);
         return changeIndex(moveIndex(props.index === undefined || props.index < 0 ? 0 : 1, props.index ?? 0, getDropdownLength()));
+      case "Escape":
+        event.preventDefault();
+        return handleEscape();
       case "Enter":
       case "NumpadEnter":
-        return commit();
+        return handleEnter();
       case "Tab":
-        return commit();
-      case "Space":
-        return;
+        return handleTab();
     }
   }, [props.index, props.input]);
+
+  function handleEscape() {
+    const input = props.input ?? "";
+    props.onCommit(input, getIndexFromInput(input, ref_dropdown.current?.children));
+    setDropdown(false);
+    setTempInput("");
+  }
+
+  function handleEnter() {
+    console.log(ref_collapsed.current)
+    if (!ref_collapsed.current) {
+      if (props.index && props.index > -1) {
+        props.onCommit(getInputFromIndex(props.index, ref_dropdown.current?.children), props.index);
+      }
+      else {
+        props.onCommit(props.input ?? "", getIndexFromInput(input, ref_dropdown.current?.children));
+      }
+      setDropdown(false);
+    }
+    else if (React.Children.count(props.children)) {
+      setDropdown(true);
+    }
+    else {
+      props.onCommit(props.input ?? "", getIndexFromInput(props.input, ref_dropdown.current?.children));
+      setDropdown(false);
+    }
+    setTempInput("");
+  }
+
+  function handleTab() {
+    if (dropdown) {
+      if (props.index && props.index > -1) {
+        props.onCommit(getInputFromIndex(props.index, ref_dropdown.current?.children), props.index);
+      }
+      else {
+        props.onCommit(props.input ?? "", getIndexFromInput(input, ref_dropdown.current?.children));
+      }
+    }
+    else {
+      props.onCommit(props.input ?? "", getIndexFromInput(props.input, ref_dropdown.current?.children));
+    }
+    setTempInput("");
+  }
+
   const onInputChange = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const input = event.target.value;
@@ -129,15 +175,17 @@ function moveIndex(offset: number, current_index: number, length: number) {
   return (length + current_index + offset) % length;
 }
 
-function getInputFromIndex(index: number, list: HTMLCollection | Array<Element> = []) {
+function getInputFromIndex(index?: number, list?: HTMLCollection | Array<Element>) {
+  if (index === undefined) return "";
   if (list instanceof HTMLCollection) list = [...list];
-  return getElementText(list.at(index));
+  return getElementText(list?.at(index));
 }
 
-function getIndexFromInput(input: string, list: HTMLCollection | Array<Element> = []) {
+function getIndexFromInput(input?: string, list?: HTMLCollection | Array<Element>) {
+  if (input === undefined) return -1;
   if (list instanceof HTMLCollection) list = [...list];
-  for (let i = 0; i < list.length; i++) {
-    const element = list.at(i);
+  for (let i = 0; i < (list?.length ?? 0); i++) {
+    const element = list?.at(i);
     if (element && input === getElementText(element).toLowerCase()) return i;
   }
   return -1;
