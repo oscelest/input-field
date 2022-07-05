@@ -27,7 +27,7 @@ export default [
       peerDepsExternal(),
       resolve(),
       commonjs(),
-      typescript({tsconfig: "./tsconfig.build.json"}),
+      typescript({tsconfig: "./tsconfig.json"}),
       postcss(),
       terser(),
     ],
