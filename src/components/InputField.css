@@ -1,0 +1,59 @@
+.react-input {
+  display:         flex;
+  flex:            0 0 auto;
+  flex-flow:       column;
+  justify-content: center;
+  width:           200px;
+  height:          40px;
+  position:        relative;
+  border:          1px solid black;
+  border-radius:   2px;
+}
+
+.react-input-title {
+  font-size:   100%;
+  font-family: inherit;
+  transition:  font-size .2s ease-in-out;
+  cursor:      text;
+}
+
+.react-input-title.active {
+  font-size: 75%;
+}
+
+.react-input-value {
+  padding:     0;
+  font-size:   0.1px;
+  font-family: inherit;
+  background:  transparent;
+  border:      none;
+  outline:     none;
+  transition:  font-size .2s ease-in-out;
+}
+
+.react-input-value.active {
+  font-size: 100%;
+}
+
+.react-input-dropdown {
+  display:   none;
+  flex-flow: column;
+  width:     100%;
+  position:  absolute;
+  top:       100%;
+  border:    inherit;
+}
+
+.react-input-dropdown.active {
+  display: flex;
+}
+
+.react-input-option {
+  background: transparent;
+  cursor:     pointer;
+}
+
+.react-input-option.active {
+  color:      HighlightText;
+  background: Highlight;
+}
