@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Title</title>
+        <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+        <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+        <script type="module" src="dist/umd/index.js"></script>
+
+    </head>
+    <body>
+        <div id="root"></div>
+
+        <script>
+          document.addEventListener("DOMContentLoaded", () => {
+            const domContainer = document.getElementById("root");
+            const root = ReactDOM.createRoot(domContainer);
+            console.log(window.Test)
+            console.log(window.Test.InputField)
+            root.render(React.createElement(window.Test.InputField, {label: "Hello World", children: [
+                React.createElement("span", {children: "Test1"}),
+                React.createElement("span", {children: "Test2"}),
+                React.createElement("span", {children: "Test3"}),
+                React.createElement("span", {children: "Test4"}),
+              ]}));
+          })
+        </script>
+    </body>
+</html>

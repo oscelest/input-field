@@ -1,53 +1,67 @@
 import React, {useRef, useCallback, useState} from "react";
 import InputFieldType from "./InputFieldType";
-import {getElementText, getIndexFromInput, getInputFromIndex, moveIndex, getIndexOfElement} from "../Utility";
+import {getElementText, getIndexFromInput, getInputFromIndex, getIndexOfElement} from "../Utility";
 import "./InputField.css";
 
 function InputField(props: InputFieldProps) {
+  // States to check how component should be rendered
   const [hover, setHover] = useState<boolean>(false);
   const [focus, setFocus] = useState<boolean>(false);
   const [dropdown, setDropdown] = useState<boolean>(false);
+
+  // Inputs to keep track of field data
   const [temp_input, setTempInput] = useState<string>("");
+  const [internal_index, setInternalIndex] = useState<number>(-1);
+  const [internal_input, setInternalInput] = useState<string>("");
+
   const ref_collapsed = useRef<boolean>();
   ref_collapsed.current = !dropdown;
 
   const ref_input = useRef<HTMLInputElement>(null);
   const ref_dropdown = useRef<HTMLDivElement>(null);
   const type = props.type ?? InputFieldType.TEXT;
-  const input = temp_input || props.input;
-  const current_input = props.input ?? "";
-  const current_index = props.index ?? -1;
 
-  const onComponentBlur = useCallback(() => setFocusAndDropdown(false), []);
-  const onComponentFocus = useCallback(() => setFocusAndDropdown(true), []);
-  const onComponentMouseEnter = useCallback(() => setHover(true), []);
-  const onComponentMouseLeave = useCallback(() => setHover(false), []);
+  let {input, onInputChange} = props as InputFieldInputProps;
+  if (onInputChange === undefined) onInputChange = setInternalInput;
+  if (input === undefined) input = internal_input;
 
-  const onDropdownMouseEnter = useCallback((event: React.MouseEvent) => setIndex(getIndexOfElement(event.currentTarget)), [props.index]);
-  const onDropdownMouseLeave = useCallback(() => setIndex(-1), []);
-  const onDropdownMouseDown = useCallback((event: React.MouseEvent) => event.preventDefault(), []);
-  const onDropdownMouseUp = useCallback((event: React.MouseEvent) => {
+  let {index, onIndexChange} = props as InputFieldIndexProps;
+  if (onIndexChange === undefined) onIndexChange = setInternalIndex;
+  if (index === undefined) index = internal_index;
+
+  const component_value = temp_input || input;
+
+  const onDropdownMouseDown = useCallback((event: React.MouseEvent) => {
+    event.preventDefault();
+  }, []);
+
+  const onDropdownMouseUp = (event: React.MouseEvent) => {
     event.preventDefault();
     const index = getIndexOfElement(event.currentTarget);
     const input = getInputFromIndex(index, ref_dropdown.current?.children);
     props.onCommit(input, index);
     setDropdown(false);
-  }, [props.index]);
+  }
 
-  const onInputMouseUp = useCallback((event: React.MouseEvent) => event.currentTarget === ref_input.current && setDropdown(true), []);
-  const onInputChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+  const onInputMouseUp = (event: React.MouseEvent) => {
+    if (event.currentTarget === ref_input.current) setDropdown(true);
+  }
+
+  const onInputValueChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const input = event.target.value;
-    props.onInputChange?.(input);
-    props.onIndexChange?.(getIndexFromInput(input, ref_dropdown.current?.children));
+    const index = getIndexFromInput(input, ref_dropdown.current?.children);
+    onInputChange(input)
+    onIndexChange(index)
     setTempInput("");
-  }, [props.input]);
-  const onInputKeyDown = useCallback((event: React.KeyboardEvent) => {
+  }
+
+  const onInputKeyDown = (event: React.KeyboardEvent) => {
     switch (event.code) {
       case "ArrowUp":
-        setIndex(moveIndex(-1, current_index, getDropdownLength()));
+        setIndex(offsetIndex(-1));
         break;
       case "ArrowDown":
-        setIndex(moveIndex(current_index < 0 ? 0 : 1, current_index, getDropdownLength()));
+        setIndex(offsetIndex(index < 0 ? 0 : 1));
         break;
       case "Escape":
         handleKeydownEscape();
@@ -63,9 +77,9 @@ function InputField(props: InputFieldProps) {
         return;
     }
     event.preventDefault();
-  }, [props.index, props.input]);
+  }
 
-  const is_focus = hover || focus || props.input;
+  const is_focus = hover || focus || input;
   const title_class = ["input-field-title"];
   const value_class = ["input-field-value"];
   if (is_focus) {
@@ -82,39 +96,53 @@ function InputField(props: InputFieldProps) {
   if (props.className) classes.push(props.className);
 
   return (
-    <label className={classes.join(" ")} onMouseEnter={onComponentMouseEnter} onMouseLeave={onComponentMouseLeave} onFocus={onComponentFocus} onBlur={onComponentBlur}>
+    <label className={classes.join(" ")} onMouseEnter={onComponentMouseTransition} onMouseLeave={onComponentMouseTransition} onFocus={onComponentFocusChange} onBlur={onComponentFocusChange}>
       <span className={title_class.join(" ")}>{props.label}</span>
-      <input ref={ref_input} className={value_class.join(" ")} value={input} type={type} onMouseUp={onInputMouseUp} onKeyDown={onInputKeyDown} onChange={onInputChange}/>
-      <div ref={ref_dropdown} className={dropdown_class.join(" ")} onMouseLeave={onDropdownMouseLeave}>
+      <input ref={ref_input} className={value_class.join(" ")} value={component_value} type={type} onMouseUp={onInputMouseUp} onKeyDown={onInputKeyDown} onChange={onInputValueChange}/>
+      <div ref={ref_dropdown} className={dropdown_class.join(" ")} onMouseLeave={onDropdownMouseTransition}>
         {React.Children.map(props.children, renderChild)}
       </div>
     </label>
   );
 
-  function renderChild(child: React.ReactNode, index: number = 0) {
+  function renderChild(child: React.ReactNode, key: number = 0) {
     const classes = ["react-input-dropdown-option"];
-    if (index === props.index) classes.push("active");
+    if (key === index) classes.push("active");
 
     return (
-      <div className={classes.join(" ")} key={index} onMouseDown={onDropdownMouseDown} onMouseUp={onDropdownMouseUp} onMouseEnter={onDropdownMouseEnter}>
+      <div className={classes.join(" ")} key={key} onMouseDown={onDropdownMouseDown} onMouseUp={onDropdownMouseUp} onMouseEnter={onDropdownMouseTransition}>
         {child}
       </div>
     );
   }
 
+  function onComponentMouseTransition(event: React.MouseEvent) {
+    setHover(event.type === "mouseenter");
+  }
+
+  function onComponentFocusChange(event: React.FocusEvent) {
+    const value = event.type === "focus";
+    setFocus(value);
+    setDropdown(value);
+  }
+
+  function onDropdownMouseTransition(event: React.MouseEvent) {
+    setIndex(event.type === "mouseenter" ? getIndexOfElement(event.currentTarget) : -1);
+  }
+
   function handleKeydownEscape() {
-    props.onCommit(current_input, getIndexFromInput(current_input, ref_dropdown.current?.children));
+    props.onCommit(input, getIndexFromInput(input, ref_dropdown.current?.children));
     setDropdown(false);
     setTempInput("");
   }
 
   function handleKeydownEnter() {
     if (!ref_collapsed.current) {
-      if (props.index && props.index > -1) {
-        props.onCommit(getInputFromIndex(props.index, ref_dropdown.current?.children), props.index);
+      if (index && index > -1) {
+        props.onCommit(getInputFromIndex(index, ref_dropdown.current?.children), index);
       }
       else {
-        props.onCommit(current_input, getIndexFromInput(input, ref_dropdown.current?.children));
+        props.onCommit(input, getIndexFromInput(component_value, ref_dropdown.current?.children));
       }
       setDropdown(false);
     }
@@ -122,7 +150,7 @@ function InputField(props: InputFieldProps) {
       setDropdown(true);
     }
     else {
-      props.onCommit(current_input, getIndexFromInput(current_input, ref_dropdown.current?.children));
+      props.onCommit(input, getIndexFromInput(input, ref_dropdown.current?.children));
       setDropdown(false);
     }
     setTempInput("");
@@ -130,47 +158,56 @@ function InputField(props: InputFieldProps) {
 
   function handleKeydownTab() {
     if (dropdown) {
-      if (props.index && props.index > -1) {
-        props.onCommit(getInputFromIndex(props.index, ref_dropdown.current?.children), props.index);
+      if (index && index > -1) {
+        props.onCommit(getInputFromIndex(index, ref_dropdown.current?.children), index);
       }
       else {
-        props.onCommit(current_input, getIndexFromInput(input, ref_dropdown.current?.children));
+        props.onCommit(input, getIndexFromInput(component_value, ref_dropdown.current?.children));
       }
     }
     else {
-      props.onCommit(current_input, getIndexFromInput(props.input, ref_dropdown.current?.children));
+      props.onCommit(input, getIndexFromInput(input, ref_dropdown.current?.children));
     }
     setTempInput("");
   }
 
   function setIndex(index: number) {
-    props.onIndexChange?.(index);
+    onIndexChange(index);
     setTempInput(getElementText(ref_dropdown.current?.children.item(index)));
     if (index > -1) setDropdown(true);
-  }
-
-  function setFocusAndDropdown(value: boolean) {
-    setFocus(value);
-    setDropdown(value);
   }
 
   function getDropdownLength() {
     return React.Children.toArray(props.children).length;
   }
+
+  function offsetIndex(offset: number) {
+
+    const current_index = Math.min(length, Math.max(0, index));
+    offset %= length;
+    return (length + current_index + offset) % length;
+  }
+
 }
 
-export interface InputFieldProps extends React.PropsWithChildren {
-  type?: InputFieldType;
-  index?: number;
-  input?: string;
-  className?: string;
-  label?: string;
-  strict?: boolean;
 
-  onReset?(): void;
+export type InputFieldProps = InputFieldInputProps | InputFieldIndexProps | (InputFieldInputProps & InputFieldIndexProps)
+
+interface InputFieldInputProps extends InputFieldBaseProps {
+  input: string;
+  onInputChange(input: string): void;
+}
+
+interface InputFieldIndexProps extends InputFieldBaseProps {
+  index: number;
+  onIndexChange(index: number): void;
+}
+
+interface InputFieldBaseProps extends React.PropsWithChildren {
+  className?: string;
+  type?: InputFieldType;
+  label?: string;
   onCommit(input: string, index: number): void;
-  onIndexChange?(index: number): void;
-  onInputChange?(input: string): void;
 }
 
 export default InputField;

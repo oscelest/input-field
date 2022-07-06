@@ -22,6 +22,12 @@ export default [
         format:    "esm",
         sourcemap: true,
       },
+      {
+        file:      pkg.umd,
+        format:    "umd",
+        name:      "Test",
+        sourcemap: true,
+      },
     ],
     plugins: [
       peerDepsExternal(),

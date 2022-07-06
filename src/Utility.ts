@@ -1,8 +1,3 @@
-export function moveIndex(offset: number, current_index: number, length: number) {
-  current_index = Math.min(length, Math.max(0, current_index));
-  offset %= length;
-  return (length + current_index + offset) % length;
-}
 
 export function getInputFromIndex(index?: number, list?: HTMLCollection | Array<Element>) {
   if (index === undefined) return "";
