@@ -1,6 +1,7 @@
 import React, {useRef, useCallback, useState} from "react";
 import InputFieldType from "./InputFieldType";
 import {getElementText, getIndexFromInput, getInputFromIndex, moveIndex, getIndexOfElement} from "../Utility";
+import "./InputField.css";
 
 function InputField(props: InputFieldProps) {
   const [hover, setHover] = useState<boolean>(false);
