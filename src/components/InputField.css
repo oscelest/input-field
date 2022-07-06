@@ -1,4 +1,4 @@
-.react-input {
+.input-field {
   display:         flex;
   flex:            0 0 auto;
   flex-flow:       column;
@@ -10,20 +10,20 @@
   border-radius:   2px;
 }
 
-.react-input-title {
+.input-field-title {
   font-size:   100%;
   font-family: inherit;
   transition:  font-size .2s ease-in-out;
   cursor:      text;
 }
 
-.react-input-title.active {
+.input-field-title.active {
   font-size: 75%;
 }
 
-.react-input-value {
+.input-field-value {
   padding:     0;
-  font-size:   0.1px;
+  font-size:   1%;
   font-family: inherit;
   background:  transparent;
   border:      none;
@@ -31,11 +31,11 @@
   transition:  font-size .2s ease-in-out;
 }
 
-.react-input-value.active {
+.input-field-value.active {
   font-size: 100%;
 }
 
-.react-input-dropdown {
+.input-field-dropdown {
   display:   none;
   flex-flow: column;
   width:     100%;
@@ -44,16 +44,16 @@
   border:    inherit;
 }
 
-.react-input-dropdown.active {
+.input-field-dropdown.active {
   display: flex;
 }
 
-.react-input-option {
+.input-field-option {
   background: transparent;
   cursor:     pointer;
 }
 
-.react-input-option.active {
+.input-field-option.active {
   color:      HighlightText;
   background: Highlight;
 }
