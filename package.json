@@ -1,10 +1,10 @@
 {
-  "name":             "@noxy/react-input-field",
-  "author":           "oscelest",
-  "version":          "0.1.5",
-  "description":      "A simple input field react element with a dropdown if needed.",
-  "license":          "MIT",
-  "repository":       {
+  "name": "@noxy/react-input-field",
+  "author": "oscelest",
+  "version": "0.1.6",
+  "description": "A simple input field react element with a dropdown if needed.",
+  "license": "MIT",
+  "repository": {
     "type": "git",
     "url":  "git@github.com:oscelest/react-input-field.git"
   },
