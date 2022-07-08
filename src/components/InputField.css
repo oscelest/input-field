@@ -51,12 +51,12 @@
   z-index:          100;
 }
 
-.input-field-option {
+.input-field-dropdown-option {
   background: transparent;
   cursor:     pointer;
 }
 
-.input-field-option.active {
+.input-field-dropdown-option.active {
   color:      HighlightText;
   background: Highlight;
 }

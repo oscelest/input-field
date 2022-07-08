@@ -1,4 +1,4 @@
-import React, {useRef, useCallback, useState} from "react";
+import React, {useRef, useState} from "react";
 import InputFieldType from "./InputFieldType";
 import {getElementText, getIndexFromInput, getInputFromIndex, getIndexOfElement} from "../Utility";
 import "./InputField.css";
@@ -30,56 +30,8 @@ function InputField(props: InputFieldProps) {
   if (index === undefined) index = internal_index;
 
   const component_value = temp_input || input;
-
-  const onDropdownMouseDown = useCallback((event: React.MouseEvent) => {
-    event.preventDefault();
-  }, []);
-
-  const onDropdownMouseUp = (event: React.MouseEvent) => {
-    event.preventDefault();
-    const index = getIndexOfElement(event.currentTarget);
-    const input = getInputFromIndex(index, ref_dropdown.current?.children);
-    props.onCommit(input, index);
-    setDropdown(false);
-  }
-
-  const onInputMouseUp = (event: React.MouseEvent) => {
-    if (event.currentTarget === ref_input.current) setDropdown(true);
-  }
-
-  const onInputValueChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const input = event.target.value;
-    const index = getIndexFromInput(input, ref_dropdown.current?.children);
-    onInputChange(input)
-    onIndexChange(index)
-    setTempInput("");
-  }
-
-  const onInputKeyDown = (event: React.KeyboardEvent) => {
-    switch (event.code) {
-      case "ArrowUp":
-        setIndex(offsetIndex(-1));
-        break;
-      case "ArrowDown":
-        setIndex(offsetIndex(index < 0 ? 0 : 1));
-        break;
-      case "Escape":
-        handleKeydownEscape();
-        break;
-      case "Enter":
-      case "NumpadEnter":
-        handleKeydownEnter();
-        break;
-      case "Tab":
-        handleKeydownTab();
-        break;
-      default:
-        return;
-    }
-    event.preventDefault();
-  }
-
   const is_focus = hover || focus || input;
+
   const title_class = ["input-field-title"];
   const value_class = ["input-field-value"];
   if (is_focus) {
@@ -88,9 +40,7 @@ function InputField(props: InputFieldProps) {
   }
 
   const dropdown_class = ["input-field-dropdown"];
-  if (dropdown) {
-    dropdown_class.push("active");
-  }
+  if (dropdown) dropdown_class.push("active");
 
   const classes = ["input-field"];
   if (props.className) classes.push(props.className);
@@ -106,7 +56,7 @@ function InputField(props: InputFieldProps) {
   );
 
   function renderChild(child: React.ReactNode, key: number = 0) {
-    const classes = ["react-input-dropdown-option"];
+    const classes = ["input-field-dropdown-option"];
     if (key === index) classes.push("active");
 
     return (
@@ -128,6 +78,53 @@ function InputField(props: InputFieldProps) {
 
   function onDropdownMouseTransition(event: React.MouseEvent) {
     setIndex(event.type === "mouseenter" ? getIndexOfElement(event.currentTarget) : -1);
+  }
+
+  function onDropdownMouseDown(event: React.MouseEvent) {
+    event.preventDefault();
+  }
+
+  function onDropdownMouseUp(event: React.MouseEvent) {
+    event.preventDefault();
+    const index = getIndexOfElement(event.currentTarget);
+    const input = getInputFromIndex(index, ref_dropdown.current?.children);
+    props.onCommit(input, index);
+    setDropdown(false);
+  }
+
+  function onInputMouseUp(event: React.MouseEvent) {
+    if (event.currentTarget === ref_input.current) setDropdown(true);
+  }
+
+  function onInputValueChange(event: React.ChangeEvent<HTMLInputElement>) {
+    const input = event.target.value;
+    const index = getIndexFromInput(input, ref_dropdown.current?.children);
+    onInputChange(input);
+    onIndexChange(index);
+    setTempInput("");
+  }
+
+  function onInputKeyDown(event: React.KeyboardEvent) {
+    switch (event.code) {
+      case "ArrowUp":
+        setIndex(offsetIndex(-1));
+        break;
+      case "ArrowDown":
+        setIndex(offsetIndex(index < 0 ? 0 : 1));
+        break;
+      case "Escape":
+        handleKeydownEscape();
+        break;
+      case "Enter":
+      case "NumpadEnter":
+        handleKeydownEnter();
+        break;
+      case "Tab":
+        return handleKeydownTab();
+      default:
+        return;
+    }
+    event.preventDefault();
   }
 
   function handleKeydownEscape() {
@@ -177,21 +174,16 @@ function InputField(props: InputFieldProps) {
     if (index > -1) setDropdown(true);
   }
 
-  function getDropdownLength() {
-    return React.Children.toArray(props.children).length;
-  }
 
   function offsetIndex(offset: number) {
-
+    const length = React.Children.toArray(props.children).length;
     const current_index = Math.min(length, Math.max(0, index));
     offset %= length;
     return (length + current_index + offset) % length;
   }
-
 }
 
-
-export type InputFieldProps = InputFieldInputProps | InputFieldIndexProps | (InputFieldInputProps & InputFieldIndexProps)
+export type InputFieldProps = InputFieldBaseProps | InputFieldInputProps | InputFieldIndexProps | (InputFieldInputProps & InputFieldIndexProps)
 
 interface InputFieldInputProps extends InputFieldBaseProps {
   input: string;
