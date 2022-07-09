@@ -4,6 +4,7 @@
   justify-content: flex-end;
   border:          1px solid black;
   padding:         2px 4px;
+  position:        relative;
 }
 
 .input-field-wrapper {
