@@ -25,7 +25,7 @@ export default [
       {
         file:      pkg.umd,
         format:    "umd",
-        name:      "Test",
+        name:      "InputField",
         sourcemap: true,
       },
     ],

@@ -21,6 +21,7 @@ function InputField(props: InputFieldProps) {
   const ref_input = useRef<HTMLInputElement>(null);
   const ref_dropdown = useRef<HTMLDivElement>(null);
   const type = props.type ?? InputFieldType.TEXT;
+  const label = props.label?.trim() ? props.label : "\u00A0";
   const error = props.error instanceof Error ? props.error.message : props.error;
 
   let {input, onInputChange} = props as InputFieldInputProps;
@@ -50,7 +51,7 @@ function InputField(props: InputFieldProps) {
   return (
     <label className={classes.join(" ")} onMouseEnter={onComponentMouseTransition} onMouseLeave={onComponentMouseTransition} onFocus={onComponentFocusChange} onBlur={onComponentFocusChange}>
       <div className={"input-field-wrapper"}>
-        <EllipsisText className={title_class.join(" ")}>{props.label}</EllipsisText>
+        <EllipsisText className={title_class.join(" ")}>{label}</EllipsisText>
         <input ref={ref_input} className={value_class.join(" ")} value={component_value} type={type} onMouseUp={onInputMouseUp} onKeyDown={onInputKeyDown} onChange={onInputValueChange}/>
       </div>
       {!!error && <span className="input-field-error">{error}</span>}
