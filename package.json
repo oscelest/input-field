@@ -1,7 +1,7 @@
 {
   "name": "@noxy/react-input-field",
   "author": "oscelest",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "description": "A simple input field react element with a dropdown if needed.",
   "license": "MIT",
   "repository": {
