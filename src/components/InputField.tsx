@@ -2,6 +2,7 @@ import React, {useRef, useState} from "react";
 import InputFieldType from "./InputFieldType";
 import {getElementText, getIndexFromInput, getInputFromIndex, getIndexOfElement} from "../Utility";
 import "./InputField.css";
+import {EllipsisText} from "@noxy/react-ellipsis-text";
 
 function InputField(props: InputFieldProps) {
   // States to check how component should be rendered
@@ -20,6 +21,7 @@ function InputField(props: InputFieldProps) {
   const ref_input = useRef<HTMLInputElement>(null);
   const ref_dropdown = useRef<HTMLDivElement>(null);
   const type = props.type ?? InputFieldType.TEXT;
+  const error = props.error instanceof Error ? props.error.message : props.error;
 
   let {input, onInputChange} = props as InputFieldInputProps;
   if (onInputChange === undefined) onInputChange = setInternalInput;
@@ -30,7 +32,7 @@ function InputField(props: InputFieldProps) {
   if (index === undefined) index = internal_index;
 
   const component_value = temp_input || input;
-  const is_focus = hover || focus || input;
+  const is_focus = hover || focus || input || error;
 
   const title_class = ["input-field-title"];
   const value_class = ["input-field-value"];
@@ -47,8 +49,11 @@ function InputField(props: InputFieldProps) {
 
   return (
     <label className={classes.join(" ")} onMouseEnter={onComponentMouseTransition} onMouseLeave={onComponentMouseTransition} onFocus={onComponentFocusChange} onBlur={onComponentFocusChange}>
-      <span className={title_class.join(" ")}>{props.label}</span>
-      <input ref={ref_input} className={value_class.join(" ")} value={component_value} type={type} onMouseUp={onInputMouseUp} onKeyDown={onInputKeyDown} onChange={onInputValueChange}/>
+      <div className={"input-field-wrapper"}>
+        <EllipsisText className={title_class.join(" ")}>{props.label}</EllipsisText>
+        <input ref={ref_input} className={value_class.join(" ")} value={component_value} type={type} onMouseUp={onInputMouseUp} onKeyDown={onInputKeyDown} onChange={onInputValueChange}/>
+      </div>
+      {!!error && <span className="input-field-error">{error}</span>}
       <div ref={ref_dropdown} className={dropdown_class.join(" ")} onMouseLeave={onDropdownMouseTransition}>
         {React.Children.map(props.children, renderChild)}
       </div>
@@ -85,6 +90,7 @@ function InputField(props: InputFieldProps) {
   }
 
   function onDropdownMouseUp(event: React.MouseEvent) {
+    if (event.button !== 0) return;
     event.preventDefault();
     const index = getIndexOfElement(event.currentTarget);
     const input = getInputFromIndex(index, ref_dropdown.current?.children);
@@ -174,7 +180,6 @@ function InputField(props: InputFieldProps) {
     if (index > -1) setDropdown(true);
   }
 
-
   function offsetIndex(offset: number) {
     const length = React.Children.toArray(props.children).length;
     const current_index = Math.min(length, Math.max(0, index));
@@ -197,6 +202,7 @@ interface InputFieldIndexProps extends InputFieldBaseProps {
 
 interface InputFieldBaseProps extends React.PropsWithChildren {
   className?: string;
+  error?: string | Error;
   type?: InputFieldType;
   label?: string;
   onCommit(input: string, index: number): void;

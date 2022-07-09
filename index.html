@@ -6,7 +6,6 @@
         <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
         <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
         <script type="module" src="dist/umd/index.js"></script>
-        <link rel="stylesheet" href="src/components/InputField.css">
     </head>
     <body>
         <div id="root"></div>
@@ -15,16 +14,17 @@
           document.addEventListener("DOMContentLoaded", () => {
             const domContainer = document.getElementById("root");
             const root         = ReactDOM.createRoot(domContainer);
-            console.log(window.Test);
-            console.log(window.Test.InputField);
             root.render(React.createElement(window.Test.InputField, {
-              label:    "Hello World",
+              label:    "Hello World Hello World Hello World Hello World",
               onCommit: (value, index) => console.log(value, index),
+              error: "testtesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttest",
               children: [
                 React.createElement("span", {children: "Test1"}),
                 React.createElement("span", {children: "Test2"}),
                 React.createElement("span", {children: "Test3"}),
                 React.createElement("span", {children: "Test4"}),
+                React.createElement("span", {children: "Test5"}),
+                React.createElement("span", {children: "Test6"}),
               ],
             }));
           });

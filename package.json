@@ -1,10 +1,10 @@
 {
-  "name": "@noxy/react-input-field",
-  "author": "oscelest",
-  "version": "0.1.6",
-  "description": "A simple input field react element with a dropdown if needed.",
-  "license": "MIT",
-  "repository": {
+  "name":             "@noxy/react-input-field",
+  "author":           "oscelest",
+  "version":          "0.1.6",
+  "description":      "A simple input field react element with a dropdown if needed.",
+  "license":          "MIT",
+  "repository":       {
     "type": "git",
     "url":  "git@github.com:oscelest/react-input-field.git"
   },
@@ -24,12 +24,15 @@
   "scripts":          {
     "build": "rollup -c"
   },
+  "dependencies":     {
+    "@noxy/react-ellipsis-text": "^0.1.4"
+  },
   "devDependencies":  {
     "@rollup/plugin-commonjs":          "^22.0.1",
     "@rollup/plugin-node-resolve":      "^13.3.0",
     "@rollup/plugin-typescript":        "^8.3.3",
-    "@types/react":                     "^18.0.14",
-    "rollup":                           "^2.75.7",
+    "@types/react":                     "^18.0.15",
+    "rollup":                           "^2.76.0",
     "rollup-plugin-dts":                "^4.2.2",
     "rollup-plugin-peer-deps-external": "^2.2.4",
     "rollup-plugin-postcss":            "^4.0.2",

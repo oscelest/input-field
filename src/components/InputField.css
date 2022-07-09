@@ -3,36 +3,52 @@
   flex:            0 0 auto;
   flex-flow:       column;
   justify-content: flex-end;
-  width:           200px;
-  position:        relative;
   border:          1px solid black;
   border-radius:   2px;
+  padding:         2px 4px;
+}
+
+.input-field-wrapper {
+  display:         flex;
+  flex-flow:       column;
+  justify-content: center;
+  position:        relative;
   padding-top:     13px;
-  padding-left:    2px;
 }
 
 .input-field-title {
-  font-size:   100%;
-  font-family: inherit;
-  transition:  font-size .2s ease-in-out, top .2s ease-in-out;
-  cursor:      text;
-  position:    absolute;
-  top:         50%;
-  transform:   translate(0, -50%);
+  font-size:  16px;
+  transition: font-size .2s ease-in-out, top .2s ease-in-out, transform .2s ease-in-out;
+  cursor:     text;
+  position:   absolute;
+  top:        50%;
+  left:       0;
+  right:      0;
+  transform:  translateY(-50%);
 }
 
 .input-field-title.active {
-  font-size: 75%;
-  top:       25%;
+  font-size: 12px;
+  top:       0;
+  transform: translateY(0%);
 }
 
 .input-field-value {
-  padding:     0;
-  font-family: inherit;
-  background:  transparent;
-  border:      none;
-  outline:     none;
-  transition:  font-size .2s ease-in-out;
+  font-family:   inherit;
+  font-size:     16px;
+  background:    transparent;
+  border:        none;
+  outline:       none;
+  padding:       0;
+  margin-bottom: -2px;
+}
+
+.input-field-error {
+  color:       red;
+  font-size:   calc(100% - 4px);
+  border-top:  1px solid rgba(0, 0, 0, 0.5);
+  white-space: break-spaces;
+  word-break:  break-word;
 }
 
 .input-field-dropdown {
