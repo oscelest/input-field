@@ -1,19 +1,15 @@
 .input-field {
   display:         flex;
-  flex:            0 0 auto;
   flex-flow:       column;
   justify-content: flex-end;
   border:          1px solid black;
-  border-radius:   2px;
   padding:         2px 4px;
 }
 
 .input-field-wrapper {
-  display:         flex;
-  flex-flow:       column;
-  justify-content: center;
-  position:        relative;
-  padding-top:     13px;
+  display:     flex;
+  position:    relative;
+  padding-top: 15px;
 }
 
 .input-field-title {
@@ -34,13 +30,15 @@
 }
 
 .input-field-value {
+  display:       flex;
+  flex:          1 1 auto;
   font-family:   inherit;
   font-size:     16px;
   background:    transparent;
   border:        none;
   outline:       none;
   padding:       0;
-  margin-bottom: -2px;
+  margin-bottom: -1px;
 }
 
 .input-field-error {
@@ -49,6 +47,7 @@
   border-top:  1px solid rgba(0, 0, 0, 0.5);
   white-space: break-spaces;
   word-break:  break-word;
+  padding-top: 2px;
 }
 
 .input-field-dropdown {
@@ -56,8 +55,8 @@
   flex-flow: column;
   position:  absolute;
   top:       100%;
-  left:      0;
-  right:     0;
+  left:      -1px;
+  right:     -1px;
   border:    inherit;
 }
 
