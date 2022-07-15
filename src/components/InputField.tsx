@@ -119,7 +119,7 @@ function InputField(props: InputFieldProps) {
     event.preventDefault();
     const index = getIndexOfElement(event.currentTarget);
     const input = getInputFromIndex(index, ref_dropdown.current?.children);
-    props.onCommit(input, index);
+    props.onCommit?.(input, index);
     setDropdown(false);
   }
 
@@ -160,7 +160,7 @@ function InputField(props: InputFieldProps) {
   }
 
   function handleKeydownEscape() {
-    props.onCommit(input, getIndexFromInput(input, ref_dropdown.current?.children));
+    props.onCommit?.(input, getIndexFromInput(input, ref_dropdown.current?.children));
     setDropdown(false);
     setTempInput("");
   }
@@ -168,10 +168,10 @@ function InputField(props: InputFieldProps) {
   function handleKeydownEnter() {
     if (!ref_collapsed.current) {
       if (index && index > -1) {
-        props.onCommit(getInputFromIndex(index, ref_dropdown.current?.children), index);
+        props.onCommit?.(getInputFromIndex(index, ref_dropdown.current?.children), index);
       }
       else {
-        props.onCommit(input, getIndexFromInput(component_value, ref_dropdown.current?.children));
+        props.onCommit?.(input, getIndexFromInput(component_value, ref_dropdown.current?.children));
       }
       setDropdown(false);
     }
@@ -179,7 +179,7 @@ function InputField(props: InputFieldProps) {
       setDropdown(true);
     }
     else {
-      props.onCommit(input, getIndexFromInput(input, ref_dropdown.current?.children));
+      props.onCommit?.(input, getIndexFromInput(input, ref_dropdown.current?.children));
       setDropdown(false);
     }
     setTempInput("");
@@ -188,14 +188,14 @@ function InputField(props: InputFieldProps) {
   function handleKeydownTab() {
     if (dropdown) {
       if (index && index > -1) {
-        props.onCommit(getInputFromIndex(index, ref_dropdown.current?.children), index);
+        props.onCommit?.(getInputFromIndex(index, ref_dropdown.current?.children), index);
       }
       else {
-        props.onCommit(input, getIndexFromInput(component_value, ref_dropdown.current?.children));
+        props.onCommit?.(input, getIndexFromInput(component_value, ref_dropdown.current?.children));
       }
     }
     else {
-      props.onCommit(input, getIndexFromInput(input, ref_dropdown.current?.children));
+      props.onCommit?.(input, getIndexFromInput(input, ref_dropdown.current?.children));
     }
     setTempInput("");
   }
@@ -241,7 +241,7 @@ interface InputFieldBaseProps extends React.PropsWithChildren {
   type?: InputFieldType;
   label?: string;
 
-  onCommit(input: string, index: number): void;
+  onCommit?(input: string, index: number): void;
   onBlur?(event: React.FocusEvent<HTMLLabelElement>): void;
   onFocus?(event: React.FocusEvent<HTMLLabelElement>): void;
   onMouseEnter?(event: React.MouseEvent<HTMLLabelElement>): void;
