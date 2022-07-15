@@ -1,54 +1,54 @@
+:root {
+  --input-field-value-font-size:        16px;
+  --input-field-label-font-size:        16px;
+  --input-field-label-active-font-size: 12px;
+}
+
 .input-field {
   display:         flex;
   flex-flow:       column;
   justify-content: center;
+  min-height:      calc(var(--input-field-value-font-size) + var(--input-field-label-font-size));
   position:        relative;
-  padding:         0 4px;
+  padding:         2px 4px;
   border:          1px solid black;
-}
-
-.input-field-wrapper {
-  display:     flex;
-  position:    relative;
-  padding-top: 15px;
 }
 
 .input-field-title {
   display:         flex;
   grid-column-gap: 2px;
-  position:        absolute;
-  top:             50%;
-  left:            4px;
-  right:           0;
-  transform:       translateY(-50%);
-  font-size:       16px;
-  transition:      font-size .2s ease-in-out, top .2s ease-in-out, transform .2s ease-in-out;
+  font-size:       var(--input-field-label-font-size);
+  transition:      font-size 200ms ease-in-out;
   cursor:          text;
 }
+
+.input-field.active .input-field-title {
+  font-size: var(--input-field-label-active-font-size);
+}
+
 
 .input-field-required:before {
   content: "*";
   color:   red;
 }
 
-.input-field-title.active {
-  top:       0;
-  transform: translateY(0%);
-  font-size: 12px;
-}
-
 .input-field-value {
   display:       flex;
-  flex:          1 1 auto;
+  flex:          0 1 auto;
   width:         100%;
+  height:        0;
   padding:       0;
-  margin-top:    15px;
   margin-bottom: -1px;
-  font-size:     16px;
+  font-size:     var(--input-field-value-font-size);
   font-family:   inherit;
   background:    transparent;
   border:        none;
   outline:       none;
+  transition:    height 200ms ease-in-out;
+}
+
+.input-field.active .input-field-value {
+  height: calc(var(--input-field-label-active-font-size) + 6px)
 }
 
 .input-field-error {

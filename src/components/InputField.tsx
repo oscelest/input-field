@@ -40,14 +40,12 @@ function InputField(props: InputFieldProps) {
   const component_value = temp_input || input;
   const is_focus = hover || focus || input || error;
 
-  const title_class = ["input-field-title"];
-  if (is_focus) title_class.push("active");
-
   const dropdown_class = ["input-field-dropdown"];
   if (dropdown) dropdown_class.push("active");
 
   const classes = ["input-field"];
   if (props.className) classes.push(props.className);
+  if (is_focus) classes.push("active");
 
   const {autoComplete, autoFocus, name, readonly, disabled} = props;
   const {onMouseOver, onMouseUp, onMouseOut, onMouseDown, onMouseMove, onDoubleClick, onMouseEnter, onMouseLeave, onFocus, onBlur, onClick} = props;
@@ -57,13 +55,13 @@ function InputField(props: InputFieldProps) {
            onMouseUp={onMouseUp} onMouseDown={onMouseDown} onMouseOver={onMouseOver} onMouseOut={onMouseOut} onMouseMove={onMouseMove}
            onClick={onClick} onDoubleClick={onDoubleClick}>
 
-      <div className={title_class.join(" ")}>
+      <div className={"input-field-title"}>
         {!!props.required && <span className={"input-field-required"}/>}
         <EllipsisText>{label}</EllipsisText>
       </div>
 
       <input ref={ref_input} className={"input-field-value"} value={component_value} type={type} {...min_max}
-             autoComplete={autoComplete} autoFocus={autoFocus} name={name} readOnly={readonly} disabled={disabled} 
+             autoComplete={autoComplete} autoFocus={autoFocus} name={name} readOnly={readonly} disabled={disabled}
              onMouseUp={onInputMouseUp} onKeyDown={onInputKeyDown} onChange={onInputValueChange}/>
 
       {!!error && <span className="input-field-error">{error}</span>}
