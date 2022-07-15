@@ -1,10 +1,10 @@
 .input-field {
   display:         flex;
   flex-flow:       column;
-  justify-content: flex-end;
-  border:          1px solid black;
-  padding:         2px 4px;
+  justify-content: center;
   position:        relative;
+  padding:         0 4px;
+  border:          1px solid black;
 }
 
 .input-field-wrapper {
@@ -14,41 +14,50 @@
 }
 
 .input-field-title {
-  font-size:  16px;
-  transition: font-size .2s ease-in-out, top .2s ease-in-out, transform .2s ease-in-out;
-  cursor:     text;
-  position:   absolute;
-  top:        50%;
-  left:       0;
-  right:      0;
-  transform:  translateY(-50%);
+  display:         flex;
+  grid-column-gap: 2px;
+  position:        absolute;
+  top:             50%;
+  left:            4px;
+  right:           0;
+  transform:       translateY(-50%);
+  font-size:       16px;
+  transition:      font-size .2s ease-in-out, top .2s ease-in-out, transform .2s ease-in-out;
+  cursor:          text;
+}
+
+.input-field-required:before {
+  content: "*";
+  color:   red;
 }
 
 .input-field-title.active {
-  font-size: 12px;
   top:       0;
   transform: translateY(0%);
+  font-size: 12px;
 }
 
 .input-field-value {
   display:       flex;
   flex:          1 1 auto;
-  font-family:   inherit;
+  width:         100%;
+  padding:       0;
+  margin-top:    15px;
+  margin-bottom: -1px;
   font-size:     16px;
+  font-family:   inherit;
   background:    transparent;
   border:        none;
   outline:       none;
-  padding:       0;
-  margin-bottom: -1px;
 }
 
 .input-field-error {
+  padding-top: 2px;
   color:       red;
   font-size:   calc(100% - 4px);
-  border-top:  1px solid rgba(0, 0, 0, 0.5);
   white-space: break-spaces;
   word-break:  break-word;
-  padding-top: 2px;
+  border-top:  1px solid rgba(0, 0, 0, 0.5);
 }
 
 .input-field-dropdown {
@@ -63,8 +72,8 @@
 
 .input-field-dropdown.active:not(:empty) {
   display:          flex;
-  background-color: white;
   z-index:          100;
+  background-color: white;
 }
 
 .input-field-dropdown-option {

@@ -14,9 +14,10 @@
           document.addEventListener("DOMContentLoaded", () => {
             const domContainer = document.getElementById("root");
             const root         = ReactDOM.createRoot(domContainer);
-            root.render(React.createElement(window.InputField.InputField, {
+            root.render(React.createElement(window.ReactInputField.InputField, {
               label:    "Hello World Hello World Hello World Hello World",
               onCommit: (value, index) => console.log(value, index),
+              required: true,
               error: "testtesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttest",
               children: [
                 React.createElement("span", {children: "Test1"}),
