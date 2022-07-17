@@ -29,11 +29,12 @@ function InputField(props: InputFieldProps) {
   if (props.min) min_max[type === InputFieldType.NUMBER ? "min" : "minLength"] = props.min;
   if (props.max) min_max[type === InputFieldType.NUMBER ? "max" : "maxLength"] = props.max;
 
-  let {input, onInputChange} = props as InputFieldInputProps & InputFieldIndexProps;
+  let input: string = (props as InputFieldInputProps).input.toString();
+  let {onInputChange} = props as InputFieldInputProps;
   if (onInputChange === undefined) onInputChange = setInternalInput;
   if (input === undefined) input = internal_input;
 
-  let {index, onIndexChange} = props as InputFieldInputProps & InputFieldIndexProps;
+  let {index, onIndexChange} = props as InputFieldIndexProps;
   if (onIndexChange === undefined) onIndexChange = setInternalIndex;
   if (index === undefined) index = internal_index;
 
@@ -125,7 +126,6 @@ function InputField(props: InputFieldProps) {
 
   function onInputMouseUp(event: React.MouseEvent) {
     if (event.currentTarget === ref_input.current) setDropdown(true);
-
   }
 
   function onInputValueChange(event: React.ChangeEvent<HTMLInputElement>) {
@@ -217,7 +217,7 @@ function InputField(props: InputFieldProps) {
 export type InputFieldProps = InputFieldBaseProps | InputFieldInputProps | InputFieldIndexProps | (InputFieldInputProps & InputFieldIndexProps)
 
 interface InputFieldInputProps extends InputFieldBaseProps {
-  input: string;
+  input: string | number;
   onInputChange(input: string): void;
 }
 

@@ -1,4 +1,3 @@
-
 export function getInputFromIndex(index?: number, list?: HTMLCollection | Array<Element>) {
   if (index === undefined) return "";
   if (list instanceof HTMLCollection) list = Array.from(list);
