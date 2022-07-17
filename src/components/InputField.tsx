@@ -29,7 +29,7 @@ function InputField(props: InputFieldProps) {
   if (props.min) min_max[type === InputFieldType.NUMBER ? "min" : "minLength"] = props.min;
   if (props.max) min_max[type === InputFieldType.NUMBER ? "max" : "maxLength"] = props.max;
 
-  let input: string = (props as InputFieldInputProps).input.toString();
+  let input: string = (props as InputFieldInputProps).input?.toString();
   let {onInputChange} = props as InputFieldInputProps;
   if (onInputChange === undefined) onInputChange = setInternalInput;
   if (input === undefined) input = internal_input;
