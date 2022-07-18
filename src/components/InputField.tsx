@@ -31,8 +31,8 @@ function InputField(props: InputFieldProps) {
 
   let input: string = (props as InputFieldInputProps).input?.toString();
   let {onInputChange} = props as InputFieldInputProps;
-  if (onInputChange === undefined) onInputChange = setInternalInput;
   if (input === undefined) input = internal_input;
+  if (onInputChange === undefined) onInputChange = setInternalInput;
 
   let {index, onIndexChange} = props as InputFieldIndexProps;
   if (onIndexChange === undefined) onIndexChange = setInternalIndex;
@@ -106,6 +106,7 @@ function InputField(props: InputFieldProps) {
     setFocus(false);
     setDropdown(false);
     onBlur?.(event);
+    props.onCommit?.(input, index);
   }
 
   function onDropdownMouseTransition(event: React.MouseEvent) {
