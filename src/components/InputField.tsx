@@ -49,11 +49,12 @@ function InputField(props: InputFieldProps) {
   if (is_focus) classes.push("active");
 
   const {autoComplete, autoFocus, name, readonly, disabled} = props;
-  const {onMouseOver, onMouseUp, onMouseOut, onMouseDown, onMouseMove, onDoubleClick, onMouseEnter, onMouseLeave, onFocus, onBlur, onClick} = props;
+  const {onMouseOver, onMouseUp, onMouseOut, onMouseDown, onMouseMove, onWheel, onDoubleClick, onMouseEnter, onMouseLeave, onFocus, onBlur, onClick} = props;
+  const {onCut, onCopy, onPaste} = props;
 
   return (
     <label className={classes.join(" ")} onMouseEnter={onComponentMouseEnter} onMouseLeave={onComponentMouseLeave} onFocus={onComponentFocus} onBlur={onComponentBlur}
-           onMouseUp={onMouseUp} onMouseDown={onMouseDown} onMouseOver={onMouseOver} onMouseOut={onMouseOut} onMouseMove={onMouseMove}
+           onMouseUp={onComponentMouseUp} onMouseDown={onMouseDown} onMouseOver={onMouseOver} onMouseOut={onMouseOut} onMouseMove={onMouseMove} onWheel={onWheel}
            onClick={onClick} onDoubleClick={onDoubleClick}>
 
       <div className={"input-field-title"}>
@@ -63,7 +64,7 @@ function InputField(props: InputFieldProps) {
 
       <input ref={ref_input} className={"input-field-value"} value={component_value} type={type} {...min_max}
              autoComplete={autoComplete} autoFocus={autoFocus} name={name} readOnly={readonly} disabled={disabled}
-             onMouseUp={onInputMouseUp} onKeyDown={onInputKeyDown} onChange={onInputValueChange}/>
+             onKeyDown={onInputKeyDown} onChange={onInputValueChange} onCut={onCut} onCopy={onCopy} onPaste={onPaste}/>
 
       {!!error && <span className="input-field-error">{error}</span>}
 
@@ -124,11 +125,14 @@ function InputField(props: InputFieldProps) {
     setDropdown(false);
   }
 
-  function onInputMouseUp(event: React.MouseEvent) {
-    if (event.currentTarget === ref_input.current) setDropdown(true);
+  function onComponentMouseUp(event: React.MouseEvent<HTMLLabelElement>) {
+    setDropdown(true);
+    onMouseUp?.(event);
   }
 
   function onInputValueChange(event: React.ChangeEvent<HTMLInputElement>) {
+    if (props.filter && !event.target.value.match(props.filter)) return props.onFilter?.(event);
+
     const input = event.target.value;
     const index = getIndexFromInput(input, ref_dropdown.current?.children);
     onInputChange(input);
@@ -240,6 +244,7 @@ interface InputFieldBaseProps extends React.PropsWithChildren {
   error?: string | Error;
   type?: InputFieldType;
   label?: string;
+  filter?: RegExp;
 
   onCommit?(input: string, index: number): void;
   onBlur?(event: React.FocusEvent<HTMLLabelElement>): void;
@@ -248,10 +253,17 @@ interface InputFieldBaseProps extends React.PropsWithChildren {
   onMouseLeave?(event: React.MouseEvent<HTMLLabelElement>): void;
   onMouseDown?(event: React.MouseEvent<HTMLLabelElement>): void;
   onMouseUp?(event: React.MouseEvent<HTMLLabelElement>): void;
+  onFilter?(event: React.ChangeEvent<HTMLInputElement>): void;
+
+  onCut?(event: React.ClipboardEvent): void;
+  onCopy?(event: React.ClipboardEvent): void;
+  onPaste?(event: React.ClipboardEvent): void;
 
   onMouseOver?(event: React.MouseEvent<HTMLLabelElement>): void;
   onMouseMove?(event: React.MouseEvent<HTMLLabelElement>): void;
   onMouseOut?(event: React.MouseEvent<HTMLLabelElement>): void;
+
+  onWheel?(event: React.WheelEvent<HTMLLabelElement>): void;
 
   onClick?(event: React.MouseEvent<HTMLLabelElement>): void;
   onDoubleClick?(event: React.MouseEvent<HTMLLabelElement>): void;
