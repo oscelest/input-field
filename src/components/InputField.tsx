@@ -126,7 +126,7 @@ function InputField(props: InputFieldProps) {
   }
 
   function onComponentMouseUp(event: React.MouseEvent<HTMLLabelElement>) {
-    setDropdown(true);
+    if (ref_collapsed.current) setDropdown(true);
     onMouseUp?.(event);
   }
 
