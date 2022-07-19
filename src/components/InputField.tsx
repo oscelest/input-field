@@ -1,8 +1,9 @@
-import React, {useRef, useState, HTMLProps} from "react";
+import React, {useRef, useState, HTMLProps, useEffect} from "react";
 import InputFieldType from "./InputFieldType";
 import {getElementText, getIndexFromInput, getInputFromIndex, getIndexOfElement} from "../Utility";
-import "./InputField.css";
 import {EllipsisText} from "@noxy/react-ellipsis-text";
+
+const Style = require("./InputField.module.css");
 
 function InputField(props: InputFieldProps) {
   // States to check how component should be rendered
@@ -11,40 +12,30 @@ function InputField(props: InputFieldProps) {
   const [dropdown, setDropdown] = useState<boolean>(false);
 
   // Inputs to keep track of field data
-  const [temp_input, setTempInput] = useState<string>("");
+  const [dropdown_input, setDropdownInput] = useState("");
   const [internal_index, setInternalIndex] = useState<number>(-1);
   const [internal_input, setInternalInput] = useState<string>("");
-
-  const ref_collapsed = useRef<boolean>();
-  ref_collapsed.current = !dropdown;
 
   const ref_input = useRef<HTMLInputElement>(null);
   const ref_dropdown = useRef<HTMLDivElement>(null);
 
+  useEffect(() => { props.input !== undefined && setInternalInput(String(props.input)); }, [props.input]);
+  useEffect(() => { props.index !== undefined && setInternalIndex(props.index);}, [props.index]);
+
+  const current_input = dropdown_input || internal_input;
   const type = props.type ?? InputFieldType.TEXT;
   const label = props.label?.trim() ? props.label : "\u00A0";
   const error = props.error instanceof Error ? props.error.message : props.error;
+  const is_focus = hover || focus || current_input || error;
 
   const min_max = {} as Pick<HTMLProps<HTMLInputElement>, "min" | "minLength" | "max" | "maxLength">;
   if (props.min) min_max[type === InputFieldType.NUMBER ? "min" : "minLength"] = props.min;
   if (props.max) min_max[type === InputFieldType.NUMBER ? "max" : "maxLength"] = props.max;
 
-  let input: string = (props as InputFieldInputProps).input?.toString();
-  let {onInputChange} = props as InputFieldInputProps;
-  if (input === undefined) input = internal_input;
-  if (onInputChange === undefined) onInputChange = setInternalInput;
-
-  let {index, onIndexChange} = props as InputFieldIndexProps;
-  if (onIndexChange === undefined) onIndexChange = setInternalIndex;
-  if (index === undefined) index = internal_index;
-
-  const component_value = temp_input || input;
-  const is_focus = hover || focus || input || error;
-
   const dropdown_class = ["input-field-dropdown"];
   if (dropdown) dropdown_class.push("active");
 
-  const classes = ["input-field"];
+  const classes = [Style.Component, "input-field"];
   if (props.className) classes.push(props.className);
   if (is_focus) classes.push("active");
 
@@ -62,13 +53,13 @@ function InputField(props: InputFieldProps) {
         <EllipsisText>{label}</EllipsisText>
       </div>
 
-      <input ref={ref_input} className={"input-field-value"} value={component_value} type={type} {...min_max}
+      <input ref={ref_input} className={"input-field-value"} value={current_input} type={type} {...min_max}
              autoComplete={autoComplete} autoFocus={autoFocus} name={name} readOnly={readonly} disabled={disabled}
              onKeyDown={onInputKeyDown} onChange={onInputValueChange} onCut={onCut} onCopy={onCopy} onPaste={onPaste}/>
 
       {!!error && <span className="input-field-error">{error}</span>}
 
-      <div ref={ref_dropdown} className={dropdown_class.join(" ")} onMouseLeave={onDropdownMouseTransition}>
+      <div ref={ref_dropdown} className={dropdown_class.join(" ")} onMouseLeave={onDropdownMouseLeave}>
         {React.Children.map(props.children, renderChild)}
       </div>
 
@@ -77,10 +68,10 @@ function InputField(props: InputFieldProps) {
 
   function renderChild(child: React.ReactNode, key: number = 0) {
     const classes = ["input-field-dropdown-option"];
-    if (key === index) classes.push("active");
+    if (key === internal_index) classes.push("active");
 
     return (
-      <div className={classes.join(" ")} key={key} onMouseDown={onDropdownMouseDown} onMouseUp={onDropdownMouseUp} onMouseEnter={onDropdownMouseTransition}>
+      <div className={classes.join(" ")} key={key} onMouseDown={onDropdownMouseDown} onMouseUp={onDropdownMouseUp} onMouseEnter={onDropdownMouseEnter}>
         {child}
       </div>
     );
@@ -105,12 +96,17 @@ function InputField(props: InputFieldProps) {
   function onComponentBlur(event: React.FocusEvent<HTMLLabelElement>) {
     setFocus(false);
     setDropdown(false);
+    setDropdownInput("");
     onBlur?.(event);
-    props.onCommit?.(input, index);
+    if (dropdown) props.onCommit?.(internal_input, internal_index);
   }
 
-  function onDropdownMouseTransition(event: React.MouseEvent) {
-    setIndex(event.type === "mouseenter" ? getIndexOfElement(event.currentTarget) : -1);
+  function onDropdownMouseEnter(event: React.MouseEvent) {
+    setIndex(getIndexOfElement(event.currentTarget));
+  }
+
+  function onDropdownMouseLeave(event: React.MouseEvent) {
+    if (dropdown) setIndex(-1);
   }
 
   function onDropdownMouseDown(event: React.MouseEvent) {
@@ -119,15 +115,17 @@ function InputField(props: InputFieldProps) {
 
   function onDropdownMouseUp(event: React.MouseEvent) {
     if (event.button !== 0) return;
+    setDropdown(false);
     event.preventDefault();
     const index = getIndexOfElement(event.currentTarget);
     const input = getInputFromIndex(index, ref_dropdown.current?.children);
+    setInternalInput(input);
+    setInternalIndex(index);
     props.onCommit?.(input, index);
-    setDropdown(false);
   }
 
   function onComponentMouseUp(event: React.MouseEvent<HTMLLabelElement>) {
-    if (ref_collapsed.current) setDropdown(true);
+    if (!dropdown) setDropdown(true);
     onMouseUp?.(event);
   }
 
@@ -136,9 +134,12 @@ function InputField(props: InputFieldProps) {
 
     const input = event.target.value;
     const index = getIndexFromInput(input, ref_dropdown.current?.children);
-    onInputChange(input);
-    onIndexChange(index);
-    setTempInput("");
+
+    setDropdownInput("");
+    setInternalInput(input);
+    setInternalIndex(index);
+    props.onInputChange?.(input);
+    props.onIndexChange?.(index);
   }
 
   function onInputKeyDown(event: React.KeyboardEvent) {
@@ -147,7 +148,7 @@ function InputField(props: InputFieldProps) {
         setIndex(offsetIndex(-1));
         break;
       case "ArrowDown":
-        setIndex(offsetIndex(index < 0 ? 0 : 1));
+        setIndex(offsetIndex(internal_index < 0 ? 0 : 1));
         break;
       case "Escape":
         handleKeydownEscape();
@@ -165,18 +166,19 @@ function InputField(props: InputFieldProps) {
   }
 
   function handleKeydownEscape() {
-    props.onCommit?.(input, getIndexFromInput(input, ref_dropdown.current?.children));
     setDropdown(false);
-    setTempInput("");
+    setDropdownInput("");
+    props.onCommit?.(internal_input, getIndexFromInput(internal_input, ref_dropdown.current?.children));
   }
 
   function handleKeydownEnter() {
-    if (!ref_collapsed.current) {
-      if (index && index > -1) {
-        props.onCommit?.(getInputFromIndex(index, ref_dropdown.current?.children), index);
+    setDropdownInput("");
+    if (dropdown) {
+      if (internal_index && internal_index > -1) {
+        props.onCommit?.(getInputFromIndex(internal_index, ref_dropdown.current?.children), internal_index);
       }
       else {
-        props.onCommit?.(input, getIndexFromInput(component_value, ref_dropdown.current?.children));
+        props.onCommit?.(internal_input, getIndexFromInput(internal_input, ref_dropdown.current?.children));
       }
       setDropdown(false);
     }
@@ -184,54 +186,42 @@ function InputField(props: InputFieldProps) {
       setDropdown(true);
     }
     else {
-      props.onCommit?.(input, getIndexFromInput(input, ref_dropdown.current?.children));
+      props.onCommit?.(internal_input, getIndexFromInput(internal_input, ref_dropdown.current?.children));
       setDropdown(false);
     }
-    setTempInput("");
   }
 
   function handleKeydownTab() {
+    setDropdownInput("");
     if (dropdown) {
-      if (index && index > -1) {
-        props.onCommit?.(getInputFromIndex(index, ref_dropdown.current?.children), index);
+      if (internal_index && internal_index > -1) {
+        props.onCommit?.(getInputFromIndex(internal_index, ref_dropdown.current?.children), internal_index);
       }
       else {
-        props.onCommit?.(input, getIndexFromInput(component_value, ref_dropdown.current?.children));
+        props.onCommit?.(internal_input, getIndexFromInput(internal_input, ref_dropdown.current?.children));
       }
     }
     else {
-      props.onCommit?.(input, getIndexFromInput(input, ref_dropdown.current?.children));
+      props.onCommit?.(internal_input, getIndexFromInput(internal_input, ref_dropdown.current?.children));
     }
-    setTempInput("");
   }
 
   function setIndex(index: number) {
-    onIndexChange(index);
-    setTempInput(getElementText(ref_dropdown.current?.children.item(index)));
+    setInternalIndex(index);
+    setDropdownInput(getElementText(ref_dropdown.current?.children.item(index)));
     if (index > -1) setDropdown(true);
+    props.onIndexChange?.(index);
   }
 
   function offsetIndex(offset: number) {
     const length = React.Children.toArray(props.children).length;
-    const current_index = Math.min(length, Math.max(0, index));
+    const current_index = Math.min(length, Math.max(0, internal_index));
     offset %= length;
     return (length + current_index + offset) % length;
   }
 }
 
-export type InputFieldProps = InputFieldBaseProps | InputFieldInputProps | InputFieldIndexProps | (InputFieldInputProps & InputFieldIndexProps)
-
-interface InputFieldInputProps extends InputFieldBaseProps {
-  input: string | number;
-  onInputChange(input: string): void;
-}
-
-interface InputFieldIndexProps extends InputFieldBaseProps {
-  index: number;
-  onIndexChange(index: number): void;
-}
-
-interface InputFieldBaseProps extends React.PropsWithChildren {
+export interface InputFieldProps extends React.PropsWithChildren {
   className?: string;
   disabled?: boolean;
   autoComplete?: string;
@@ -246,7 +236,11 @@ interface InputFieldBaseProps extends React.PropsWithChildren {
   type?: InputFieldType;
   label?: string;
   filter?: RegExp;
+  input?: string | number;
+  index?: number;
 
+  onInputChange?(input: string): void;
+  onIndexChange?(index: number): void;
   onCommit?(input: string, index: number): void;
   onBlur?(event: React.FocusEvent<HTMLLabelElement>): void;
   onFocus?(event: React.FocusEvent<HTMLLabelElement>): void;

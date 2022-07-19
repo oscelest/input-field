@@ -1,0 +1,90 @@
+:root .Component {
+  --input-field-value-font-size:        16px;
+  --input-field-label-font-size:        16px;
+  --input-field-label-active-font-size: 12px;
+}
+
+.Component {
+  display:    flex;
+  box-sizing: border-box;
+  position:   relative;
+}
+
+.Component:global(.input-field) {
+  flex-flow:       column;
+  justify-content: center;
+  min-height:      calc(var(--input-field-value-font-size) + var(--input-field-label-font-size) + 8px);
+  padding:         2px 4px;
+  border:          1px solid black;
+}
+
+.Component:global(.input-field .input-field-title) {
+  grid-column-gap: 2px;
+  font-size:       var(--input-field-label-font-size);
+  line-height:     var(--input-field-label-font-size);
+  transition:      font-size 200ms ease-in-out;
+  cursor:          text;
+}
+
+.Component:global(.input-field.active .input-field-title) {
+  font-size: var(--input-field-label-active-font-size);
+}
+
+.Component:global(.input-field .input-field-required:before) {
+  content: "*";
+  color:   red;
+}
+
+.Component:global(.input-field .input-field-value) {
+  flex:          0 1 auto;
+  width:         100%;
+  height:        0;
+  padding:       0;
+  margin-bottom: -1px;
+  font-size:     var(--input-field-value-font-size);
+  line-height:   var(--input-field-value-font-size);
+  font-family:   inherit;
+  background:    transparent;
+  border:        none;
+  outline:       none;
+  transition:    height 200ms ease-in-out;
+}
+
+.Component:global(.input-field.active .input-field-value) {
+  height: calc(var(--input-field-label-active-font-size) + 6px);
+}
+
+.Component:global(.input-field .input-field-error) {
+  padding-top: 2px;
+  color:       red;
+  font-size:   calc(100% - 4px);
+  white-space: break-spaces;
+  word-break:  break-word;
+  border-top:  1px solid rgba(0, 0, 0, 0.5);
+}
+
+.Component:global(.input-field .input-field-dropdown) {
+  display:          none;
+  flex-flow:        column;
+  position:         absolute;
+  top:              100%;
+  left:             -1px;
+  right:            -1px;
+  z-index:          100;
+  background-color: white;
+  border:           inherit;
+}
+
+.Component:global(.input-field .input-field-dropdown.active:not(:empty)) {
+  display: flex;
+}
+
+.Component:global(.input-field .input-field-dropdown-option) {
+  background: transparent;
+  cursor:     pointer;
+}
+
+.Component:global(.input-field .input-field-dropdown-option.active) {
+  color:      HighlightText;
+  background: Highlight;
+}
