@@ -2,8 +2,7 @@ import React, {useRef, useState, HTMLProps, useEffect} from "react";
 import InputFieldType from "./InputFieldType";
 import {getElementText, getIndexFromInput, getInputFromIndex, getIndexOfElement} from "../Utility";
 import {EllipsisText} from "@noxy/react-ellipsis-text";
-
-const Style = require("./InputField.module.css");
+import Style from "./InputField.module.css";
 
 function InputField(props: InputFieldProps) {
   // States to check how component should be rendered
