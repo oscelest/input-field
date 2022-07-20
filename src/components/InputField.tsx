@@ -210,6 +210,7 @@ function InputField(props: InputFieldProps) {
       if (result !== undefined) input = String(result);
     }
 
+    setDropdown(true);
     setInternalInput(input);
     return input;
   }
