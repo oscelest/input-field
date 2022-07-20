@@ -97,7 +97,7 @@ function InputField(props: InputFieldProps) {
     setDropdown(false);
     setDropdownInput("");
     onBlur?.(event);
-    if (dropdown) props.onCommit?.(internal_input, internal_index);
+    if (dropdown) commit(internal_input, internal_index);
   }
 
   function onDropdownMouseEnter(event: React.MouseEvent) {
@@ -114,12 +114,10 @@ function InputField(props: InputFieldProps) {
 
   function onDropdownMouseUp(event: React.MouseEvent) {
     if (event.button !== 0) return;
-    setDropdown(false);
     event.preventDefault();
+    setDropdown(false);
     const index = getIndexOfElement(event.currentTarget);
     const input = getInputFromIndex(index, ref_dropdown.current?.children);
-    setInternalInput(input);
-    setInternalIndex(index);
     props.onCommit?.(input, index);
   }
 
@@ -131,14 +129,9 @@ function InputField(props: InputFieldProps) {
   function onInputValueChange(event: React.ChangeEvent<HTMLInputElement>) {
     if (props.filter && !event.target.value.match(props.filter)) return props.onFilter?.(event);
 
-    const input = event.target.value;
-    const index = getIndexFromInput(input, ref_dropdown.current?.children);
-
     setDropdownInput("");
-    setInternalInput(input);
-    setInternalIndex(index);
-    props.onInputChange?.(input);
-    props.onIndexChange?.(index);
+    const input = setInput(event.target.value);
+    setIndex(getIndexFromInput(input, ref_dropdown.current?.children));
   }
 
   function onInputKeyDown(event: React.KeyboardEvent) {
@@ -165,51 +158,72 @@ function InputField(props: InputFieldProps) {
   }
 
   function handleKeydownEscape() {
-    setDropdown(false);
-    setDropdownInput("");
-    props.onCommit?.(internal_input, getIndexFromInput(internal_input, ref_dropdown.current?.children));
+    commit(internal_input, getIndexFromInput(internal_input, ref_dropdown.current?.children));
   }
 
   function handleKeydownEnter() {
-    setDropdownInput("");
     if (dropdown) {
       if (internal_index && internal_index > -1) {
-        props.onCommit?.(getInputFromIndex(internal_index, ref_dropdown.current?.children), internal_index);
+        commit(getInputFromIndex(internal_index, ref_dropdown.current?.children), internal_index);
       }
       else {
-        props.onCommit?.(internal_input, getIndexFromInput(internal_input, ref_dropdown.current?.children));
+        commit(internal_input, getIndexFromInput(internal_input, ref_dropdown.current?.children));
       }
-      setDropdown(false);
     }
     else if (React.Children.count(props.children)) {
       setDropdown(true);
     }
     else {
-      props.onCommit?.(internal_input, getIndexFromInput(internal_input, ref_dropdown.current?.children));
-      setDropdown(false);
+      commit(internal_input, getIndexFromInput(internal_input, ref_dropdown.current?.children));
     }
   }
 
   function handleKeydownTab() {
-    setDropdownInput("");
     if (dropdown) {
       if (internal_index && internal_index > -1) {
-        props.onCommit?.(getInputFromIndex(internal_index, ref_dropdown.current?.children), internal_index);
+        commit(getInputFromIndex(internal_index, ref_dropdown.current?.children), internal_index);
       }
       else {
-        props.onCommit?.(internal_input, getIndexFromInput(internal_input, ref_dropdown.current?.children));
+        commit(internal_input, getIndexFromInput(internal_input, ref_dropdown.current?.children));
       }
     }
     else {
-      props.onCommit?.(internal_input, getIndexFromInput(internal_input, ref_dropdown.current?.children));
+      commit(internal_input, getIndexFromInput(internal_input, ref_dropdown.current?.children));
     }
   }
 
+  function commit(input: string, index: number) {
+    if (props.onCommit) {
+      const result = props.onCommit?.(internal_input, internal_index);
+      if (result?.input !== undefined) input = String(result.input);
+      if (result?.index !== undefined) index = result.index;
+    }
+    setDropdown(false);
+    setDropdownInput("");
+    setInternalInput(input);
+    setInternalIndex(index);
+  }
+
+  function setInput(input: string) {
+    if (props.onInputChange) {
+      const result = props.onInputChange(input);
+      if (result !== undefined) input = String(result);
+    }
+
+    setInternalInput(input);
+    return input;
+  }
+
   function setIndex(index: number) {
+    if (props.onIndexChange) {
+      const result = props.onIndexChange(index);
+      if (result !== undefined) index = result;
+    }
+
     setInternalIndex(index);
     setDropdownInput(getElementText(ref_dropdown.current?.children.item(index)));
     if (index > -1) setDropdown(true);
-    props.onIndexChange?.(index);
+    return index;
   }
 
   function offsetIndex(offset: number) {
@@ -238,9 +252,9 @@ export interface InputFieldProps extends React.PropsWithChildren {
   input?: string | number;
   index?: number;
 
-  onInputChange?(input: string): void;
-  onIndexChange?(index: number): void;
-  onCommit?(input: string, index: number): void;
+  onInputChange?(input: string): void | string | number;
+  onIndexChange?(index: number): void | number;
+  onCommit?(input: string, index: number): void | {input?: string | number, index?: number};
   onBlur?(event: React.FocusEvent<HTMLLabelElement>): void;
   onFocus?(event: React.FocusEvent<HTMLLabelElement>): void;
   onMouseEnter?(event: React.MouseEvent<HTMLLabelElement>): void;
