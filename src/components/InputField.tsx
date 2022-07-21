@@ -43,9 +43,9 @@ function InputField(props: InputFieldProps) {
   const {onCut, onCopy, onPaste} = props;
 
   return (
-    <label className={classes.join(" ")} onMouseEnter={onComponentMouseEnter} onMouseLeave={onComponentMouseLeave} onFocus={onComponentFocus} onBlur={onComponentBlur}
-           onMouseUp={onComponentMouseUp} onMouseDown={onMouseDown} onMouseOver={onMouseOver} onMouseOut={onMouseOut} onMouseMove={onMouseMove} onWheel={onWheel}
-           onClick={onClick} onDoubleClick={onDoubleClick}>
+    <label className={classes.join(" ")} data-caret={props.caret}
+           onMouseEnter={onComponentMouseEnter} onMouseLeave={onComponentMouseLeave} onFocus={onComponentFocus} onBlur={onComponentBlur} onMouseUp={onComponentMouseUp} onMouseDown={onMouseDown}
+           onMouseOver={onMouseOver} onMouseOut={onMouseOut} onMouseMove={onMouseMove} onWheel={onWheel} onClick={onClick} onDoubleClick={onDoubleClick}>
 
       <div className={"input-field-title"}>
         {!!props.required && <span className={"input-field-required"}/>}
@@ -252,6 +252,7 @@ export interface InputFieldProps extends React.PropsWithChildren {
   filter?: RegExp;
   input?: string | number;
   index?: number;
+  caret?: boolean;
 
   onInputChange?(input: string): void | string | number;
   onIndexChange?(index: number): void | number;

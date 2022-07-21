@@ -8,7 +8,7 @@ function IndexPage() {
 
   return (
     <div style={{display: "flex"}}>
-      <InputField input={input} index={index} label={"Hello World"} error={"test"} onInputChange={onChange} onCommit={onCommit}>
+      <InputField input={input} index={index} caret={true} label={"Hello World"} error={"test"} onInputChange={onChange} onCommit={onCommit}>
         <span>Option 1</span>
         <span>Option 2</span>
         <span>Option 3</span>

@@ -4,6 +4,8 @@
   --input-field-label-active-font-size: 12px;
 }
 
+/* ----- Input field general ----- */
+
 .Component {
   display:    flex;
   box-sizing: border-box;
@@ -18,6 +20,37 @@
   border:          1px solid black;
 }
 
+.Component:global(.input-field[data-caret="true"]::before) {
+  content:       " ";
+  width:         0;
+  height:        0;
+  position:      absolute;
+  top:           calc((var(--input-field-value-font-size) + var(--input-field-label-font-size)) / 2);
+  right:         4px;
+  border-top:    6px solid rgba(0, 0, 0, 0.3);
+  border-left:   6px solid transparent;
+  border-right:  6px solid transparent;
+  border-bottom: none;
+  border-bottom: none;
+  transition:    border-top-color 200ms ease-in-out;
+}
+
+.Component:global(.input-field[data-caret="true"]:hover::before) {
+  border-top-color: rgba(0, 0, 0, 0.7);
+}
+
+.Component:global(.input-field[data-caret="true"]::after) {
+  content:  " ";
+  width:    20px;
+  height:   calc(var(--input-field-value-font-size) + var(--input-field-label-font-size) + 4px);
+  position: absolute;
+  top:      0;
+  right:    0;
+  cursor:   pointer;
+}
+
+/* ----- Input field title ----- */
+
 .Component:global(.input-field .input-field-title) {
   grid-column-gap: 2px;
   font-size:       var(--input-field-label-font-size);
@@ -30,10 +63,14 @@
   font-size: var(--input-field-label-active-font-size);
 }
 
+/* ----- Input field required ----- */
+
 .Component:global(.input-field .input-field-required:before) {
   content: "*";
   color:   red;
 }
+
+/* ----- Input field value ----- */
 
 .Component:global(.input-field .input-field-value) {
   flex:          0 1 auto;
@@ -54,6 +91,8 @@
   height: calc(var(--input-field-label-active-font-size) + 6px);
 }
 
+/* ----- Input field error ----- */
+
 .Component:global(.input-field .input-field-error) {
   padding-top: 2px;
   color:       red;
@@ -62,6 +101,8 @@
   word-break:  break-word;
   border-top:  1px solid rgba(0, 0, 0, 0.5);
 }
+
+/* ----- Input field dropdown ----- */
 
 .Component:global(.input-field .input-field-dropdown) {
   display:          none;
