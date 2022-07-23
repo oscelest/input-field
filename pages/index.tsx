@@ -1,6 +1,8 @@
 import {InputField} from "../src";
 import {useState} from "react";
 
+const filter = /\d\w/;
+
 function IndexPage() {
   const [input, setInput] = useState<string>("Test");
   const [index, setIndex] = useState<number>(-1);
@@ -8,7 +10,7 @@ function IndexPage() {
 
   return (
     <div style={{display: "flex"}}>
-      <InputField input={input} index={index} caret={true} label={"Hello World"} error={"test"} onInputChange={onChange} onCommit={onCommit}>
+      <InputField input={input} index={index} caret={true} label={"Hello World"} filter={filter} error={"test"} onInputChange={onChange} onCommit={onCommit}>
         <span>Option 1</span>
         <span>Option 2</span>
         <span>Option 3</span>

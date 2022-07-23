@@ -24,15 +24,13 @@ function InputField(props: InputFieldProps) {
   const current_input = dropdown_input || internal_input;
   const type = props.type ?? InputFieldType.TEXT;
   const label = props.label?.trim() ? props.label : "\u00A0";
-  const error = props.error instanceof Error ? props.error.message : props.error;
-  const is_focus = hover || focus || current_input || error;
+
+  const is_focus = hover || focus || current_input || props.error;
 
   const min_max = {} as Pick<HTMLProps<HTMLInputElement>, "min" | "minLength" | "max" | "maxLength">;
   if (props.min) min_max[type === InputFieldType.NUMBER ? "min" : "minLength"] = props.min;
   if (props.max) min_max[type === InputFieldType.NUMBER ? "max" : "maxLength"] = props.max;
 
-  const dropdown_class = ["input-field-dropdown"];
-  if (dropdown) dropdown_class.push("active");
 
   const classes = [Style.Component, "input-field"];
   if (props.className) classes.push(props.className);
@@ -56,14 +54,34 @@ function InputField(props: InputFieldProps) {
              autoComplete={autoComplete} autoFocus={autoFocus} name={name} readOnly={readonly} disabled={disabled}
              onKeyDown={onInputKeyDown} onChange={onInputValueChange} onCut={onCut} onCopy={onCopy} onPaste={onPaste}/>
 
-      {!!error && <span className="input-field-error">{error}</span>}
-
-      <div ref={ref_dropdown} className={dropdown_class.join(" ")} onMouseLeave={onDropdownMouseLeave}>
-        {React.Children.map(props.children, renderChild)}
-      </div>
+      {renderError()}
+      {renderDropDown()}
 
     </label>
   );
+
+  function renderError() {
+    if (!props.error) return null;
+
+    const error = props.error instanceof Error ? props.error.message : props.error;
+
+    return (
+      <span className="input-field-error">{error}</span>
+    );
+  }
+
+  function renderDropDown() {
+    if (!React.Children.count(props.children)) return null;
+
+    const classes = ["input-field-dropdown"];
+    if (dropdown) classes.push("active");
+
+    return (
+      <div ref={ref_dropdown} className={classes.join(" ")} onMouseLeave={onDropdownMouseLeave}>
+        {React.Children.map(props.children, renderChild)}
+      </div>
+    );
+  }
 
   function renderChild(child: React.ReactNode, key: number = 0) {
     const classes = ["input-field-dropdown-option"];

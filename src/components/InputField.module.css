@@ -6,7 +6,7 @@
 
 /* ----- Input field general ----- */
 
-.Component {
+.Component * {
   display:    flex;
   box-sizing: border-box;
   position:   relative;
