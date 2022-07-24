@@ -1,7 +1,7 @@
 import {InputField} from "../src";
 import {useState} from "react";
 
-const filter = /\d\w/;
+const filter = /^#?[a-f\d]{0,8}$/i;
 
 function IndexPage() {
   const [input, setInput] = useState<string>("Test");
