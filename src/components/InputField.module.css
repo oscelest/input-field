@@ -54,6 +54,7 @@
   line-height:     var(--input-field-label-font-size);
   transition:      font-size 200ms ease-in-out;
   cursor:          text;
+  user-select:     none;
 }
 
 .Component:global(.input-field.active .input-field-title) {
