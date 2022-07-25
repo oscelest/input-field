@@ -6,7 +6,6 @@ const filter = /^#?[a-f\d]{0,8}$/i;
 function IndexPage() {
   const [input, setInput] = useState<string>("Test");
   const [index, setIndex] = useState<number>(-1);
-  console.log("Index from page", index);
 
   return (
     <div style={{display: "flex"}}>
@@ -20,7 +19,6 @@ function IndexPage() {
   );
 
   function onChange(value: string) {
-    console.log(value);
     if (value === "Hello") {
       setInput("World");
     }
@@ -30,7 +28,6 @@ function IndexPage() {
   }
 
   function onCommit(value: string, index: number) {
-    console.log("Commiting in index", value, index);
     setInput(value);
     setIndex(index);
   }
