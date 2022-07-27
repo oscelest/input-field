@@ -15,9 +15,9 @@
     "allowSyntheticDefaultImports":     true,
     "emitDeclarationOnly":              true
   },
-  "include": [
-    "**/*.ts",
-    "**/*.tsx",
+  "include":         [
+    "src/*.ts",
+    "src/*.tsx",
     "declarations.d.ts"
   ],
   "exclude":         [
