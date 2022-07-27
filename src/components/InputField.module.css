@@ -17,8 +17,8 @@
 }
 
 .Component:global(.input-field .input-field-content) {
-    display: flex;
-    min-height: calc(var(--input-field-value-font-size) + var(--input-field-label-font-size) + 8px);
+    display:    flex;
+    min-height: calc(var(--input-field-value-font-size) + var(--input-field-label-font-size) + 2px);
 }
 
 .Component:global(.input-field .input-field-content-wrapper) {
