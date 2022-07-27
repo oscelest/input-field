@@ -1,132 +1,140 @@
 :root .Component {
-  --input-field-value-font-size:        16px;
-  --input-field-label-font-size:        16px;
-  --input-field-label-active-font-size: 12px;
+    --input-field-value-font-size: 16px;
+    --input-field-label-font-size: 16px;
+    --input-field-label-active-font-size: 12px;
 }
 
-/* ----- Input field general ----- */
+/* ----- Layout ----- */
 
 .Component:global(.input-field) {
-  display:         flex;
-  flex-flow:       column;
-  justify-content: center;
-  min-height:      calc(var(--input-field-value-font-size) + var(--input-field-label-font-size) + 8px);
-  box-sizing:      border-box;
-  position:        relative;
-  padding:         2px 4px;
-  border:          1px solid black;
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+    box-sizing: border-box;
+    position: relative;
+    padding: 2px 4px;
+    border: 1px solid black;
 }
 
-.Component:global(.input-field[data-caret="true"]::before) {
-  content:       " ";
-  width:         0;
-  height:        0;
-  position:      absolute;
-  top:           calc((var(--input-field-value-font-size) + var(--input-field-label-font-size)) / 2);
-  right:         4px;
-  border-top:    6px solid rgba(0, 0, 0, 0.3);
-  border-left:   6px solid transparent;
-  border-right:  6px solid transparent;
-  border-bottom: none;
-  border-bottom: none;
-  transition:    border-top-color 200ms ease-in-out;
+.Component:global(.input-field .input-field-content) {
+    display: flex;
+    min-height: calc(var(--input-field-value-font-size) + var(--input-field-label-font-size) + 8px);
 }
 
-.Component:global(.input-field[data-caret="true"]:hover::before) {
-  border-top-color: rgba(0, 0, 0, 0.7);
+.Component:global(.input-field .input-field-content-wrapper) {
+    display: flex;
+    flex: 1 1 auto;
+    flex-flow: column;
+    justify-content: center;
 }
 
-.Component:global(.input-field[data-caret="true"]::after) {
-  content:  " ";
-  width:    20px;
-  height:   calc(var(--input-field-value-font-size) + var(--input-field-label-font-size) + 4px);
-  position: absolute;
-  top:      0;
-  right:    0;
-  cursor:   pointer;
+/* ----- Caret ----- */
+
+.Component:global(.input-field .input-field-caret) {
+    display: flex;
+    flex: 0 0 auto;
+    width: 25px;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
 }
 
-/* ----- Input field title ----- */
+.Component:global(.input-field .input-field-caret::before) {
+    content: " ";
+    border-top: 6px solid rgba(0, 0, 0, 0.3);
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-bottom: none;
+    border-bottom: none;
+    transition: border-top-color 200ms ease-in-out;
+}
+
+.Component:global(.input-field .input-field-caret:hover::before) {
+    border-top-color: rgba(0, 0, 0, 0.7);
+}
+
+/* ----- Title ----- */
 
 .Component:global(.input-field .input-field-title) {
-  grid-column-gap: 2px;
-  font-size:       var(--input-field-label-font-size);
-  line-height:     var(--input-field-label-font-size);
-  transition:      font-size 200ms ease-in-out;
-  cursor:          text;
-  user-select:     none;
+    grid-column-gap: 2px;
+    font-size: var(--input-field-label-font-size);
+    line-height: var(--input-field-label-font-size);
+    transition: font-size 200ms ease-in-out;
+    cursor: text;
+    user-select: none;
 }
 
-.Component:global(.input-field.active .input-field-title) {
-  font-size: var(--input-field-label-active-font-size);
+.Component:global(.input-field[data-active="true"] .input-field-title) {
+    font-size: var(--input-field-label-active-font-size);
 }
 
-/* ----- Input field required ----- */
+/* ----- Required ----- */
 
 .Component:global(.input-field .input-field-required:before) {
-  content: "*";
-  color:   red;
+    content: "*";
+    color: red;
 }
 
-/* ----- Input field value ----- */
+/* ----- Value input field ----- */
 
 .Component:global(.input-field .input-field-value) {
-  width:         100%;
-  height:        0;
-  padding:       0;
-  margin-bottom: -1px;
-  font-size:     var(--input-field-value-font-size);
-  line-height:   var(--input-field-value-font-size);
-  font-family:   inherit;
-  background:    transparent;
-  border:        none;
-  outline:       none;
-  transition:    height 200ms ease-in-out;
+    width: 100%;
+    height: 0;
+    padding: 0;
+    margin-bottom: -1px;
+    font-size: var(--input-field-value-font-size);
+    line-height: var(--input-field-value-font-size);
+    font-family: inherit;
+    background: transparent;
+    border: none;
+    outline: none;
+    transition: height 200ms ease-in-out;
 }
 
-.Component:global(.input-field.active .input-field-value) {
-  height: calc(var(--input-field-label-active-font-size) + 6px);
+.Component:global(.input-field[data-active="true"] .input-field-value) {
+    height: calc(var(--input-field-label-active-font-size) + 6px);
 }
 
-/* ----- Input field error ----- */
+/* ----- Error message ----- */
 
 .Component:global(.input-field .input-field-error) {
-  box-sizing:  border-box;
-  padding-top: 2px;
-  color:       red;
-  font-size:   calc(100% - 4px);
-  white-space: break-spaces;
-  word-break:  break-word;
-  border-top:  1px solid rgba(0, 0, 0, 0.5);
-
+    box-sizing: border-box;
+    padding-top: 2px;
+    color: red;
+    font-size: calc(100% - 4px);
+    white-space: break-spaces;
+    word-break: break-word;
+    border-top: 1px solid rgba(0, 0, 0, 0.5);
 }
 
-/* ----- Input field dropdown ----- */
+/* ----- Dropdown ----- */
 
 .Component:global(.input-field .input-field-dropdown) {
-  display:          none;
-  flex-flow:        column;
-  position:         absolute;
-  top:              100%;
-  left:             -1px;
-  right:            -1px;
-  z-index:          100;
-  background-color: white;
-  border:           inherit;
+    display: none;
+    flex-flow: column;
+    position: absolute;
+    top: 100%;
+    left: -1px;
+    right: -1px;
+    z-index: 100;
+    background-color: white;
+    border: inherit;
 }
 
-.Component:global(.input-field .input-field-dropdown.active:not(:empty)) {
-  display: flex;
+.Component:global(.input-field .input-field-dropdown[data-active="true"]:not(:empty)) {
+    display: flex;
 }
+
+/* ----- Dropdown item ----- */
 
 .Component:global(.input-field .input-field-dropdown-option) {
-  box-sizing: border-box;
-  padding:    4px;
-  background: transparent;
-  cursor:     pointer;
+    box-sizing: border-box;
+    padding: 4px;
+    background: transparent;
+    cursor: pointer;
 }
 
-.Component:global(.input-field .input-field-dropdown-option.active) {
-  color:      HighlightText;
-  background: Highlight;
+.Component:global(.input-field .input-field-dropdown-option[data-active="true"]) {
+    color: HighlightText;
+    background: Highlight;
 }

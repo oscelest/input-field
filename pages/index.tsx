@@ -1,4 +1,5 @@
-import {InputField} from "../src";
+import InputField from "../src/components/InputField";
+import * as React from "react";
 import {useState} from "react";
 
 const filter = /^#?[a-f\d]{0,8}$/i;

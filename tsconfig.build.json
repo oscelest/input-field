@@ -16,8 +16,8 @@
     "emitDeclarationOnly":              true
   },
   "include": [
-    "src/*.ts",
-    "src/*.tsx",
+    "**/*.ts",
+    "**/*.tsx",
     "declarations.d.ts"
   ],
   "exclude":         [

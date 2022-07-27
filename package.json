@@ -37,7 +37,7 @@
     "@types/react-dom": "^18.0.6",
     "next": "^12.2.3",
     "react-dom": "^18.2.0",
-    "rollup": "^2.77.0",
+    "rollup": "^2.77.2",
     "rollup-plugin-dts": "^4.2.2",
     "rollup-plugin-peer-deps-external": "^2.2.4",
     "rollup-plugin-postcss": "^4.0.2",
