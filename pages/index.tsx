@@ -1,7 +1,7 @@
-import InputField from "../src/components/InputField";
 import React, {useState} from "react";
+import InputField from "../src/components/InputField";
 
-const filter = /^#?[a-f\d]{0,8}$/i;
+const filter = /^\d*$/i;
 
 function IndexPage() {
   const [input, setInput] = useState<string>("Test");
@@ -19,12 +19,9 @@ function IndexPage() {
   );
 
   function onChange(value: string) {
-    if (value === "Hello") {
-      setInput("World");
-    }
-    else {
-      setInput(value);
-    }
+    value = value !== "" ? String(Math.min(Math.max(+value || 0, 0), 10)) : "";
+    setInput(value);
+    return value;
   }
 
   function onCommit(value: string, index: number) {
