@@ -1,7 +1,7 @@
 {
   "name": "@noxy/react-input-field",
   "author": "oscelest",
-  "version": "0.5.3",
+  "version": "0.5.4",
   "description": "A simple input field react element with a dropdown if needed.",
   "license": "MIT",
   "repository": {
@@ -26,24 +26,24 @@
     "build": "rollup -c",
     "test:app": "next dev"
   },
-  "dependencies":    {
+  "dependencies": {
     "@noxy/react-flex-ellipsis-text": "^1.0.0"
   },
   "devDependencies": {
-    "@rollup/plugin-commonjs":          "^24.0.0",
-    "@rollup/plugin-node-resolve":      "^15.0.1",
-    "@rollup/plugin-terser":            "^0.3.0",
-    "@rollup/plugin-typescript":        "^11.0.0",
-    "@types/node":                      "18.11.18",
-    "@types/react":                     "^18.0.26",
-    "@types/react-dom":                 "^18.0.10",
-    "next":                             "^13.1.1",
-    "react-dom":                        "^18.2.0",
-    "rollup":                           "^3.10.0",
-    "rollup-plugin-dts":                "^5.1.1",
+    "@rollup/plugin-commonjs": "^24.0.0",
+    "@rollup/plugin-node-resolve": "^15.0.1",
+    "@rollup/plugin-terser": "^0.3.0",
+    "@rollup/plugin-typescript": "^11.0.0",
+    "@types/node": "18.11.18",
+    "@types/react": "^18.0.26",
+    "@types/react-dom": "^18.0.10",
+    "next": "^13.1.1",
+    "react-dom": "^18.2.0",
+    "rollup": "^3.10.0",
+    "rollup-plugin-dts": "^5.1.1",
     "rollup-plugin-peer-deps-external": "^2.2.4",
-    "rollup-plugin-postcss":            "^4.0.2",
-    "typescript":                       "^4.9.4"
+    "rollup-plugin-postcss": "^4.0.2",
+    "typescript": "^4.9.4"
   },
   "peerDependencies": {
     "react": "^18.2.0"
