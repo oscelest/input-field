@@ -1,8 +1,8 @@
-import React, {useRef, useState, HTMLProps, useEffect} from "react";
-import InputFieldType from "./InputFieldType";
-import {getElementText, getIndexFromInput, getInputFromIndex, getIndexOfElement} from "../Utility";
-import {EllipsisText} from "@noxy/react-ellipsis-text";
+import {FlexEllipsisText} from "@noxy/react-flex-ellipsis-text";
+import React, {HTMLProps, useEffect, useRef, useState} from "react";
+import {getElementText, getIndexFromInput, getIndexOfElement, getInputFromIndex} from "../Utility";
 import Style from "./InputField.module.css";
+import InputFieldType from "./InputFieldType";
 
 function validateUpdate<T>(value: T | undefined, fn: (v: T) => void) {
   if (value !== undefined) fn(value);
@@ -48,7 +48,7 @@ function InputField(props: InputFieldProps) {
         <div className={"input-field-content-wrapper"}>
           <div className={"input-field-title"}>
             {!!props.required && <span className={"input-field-required"}/>}
-            <EllipsisText>{label}</EllipsisText>
+            <FlexEllipsisText>{label}</FlexEllipsisText>
           </div>
 
           <input ref={ref_input} className={"input-field-value"} value={current_input} type={type} {...min_max}
@@ -261,7 +261,7 @@ export interface InputFieldProps extends BaseProps {
   max?: number;
   readonly?: boolean;
   required?: boolean;
-
+  
   error?: string | Error;
   type?: InputFieldType;
   label?: string;
@@ -269,12 +269,12 @@ export interface InputFieldProps extends BaseProps {
   input?: string | number;
   index?: number;
   caret?: boolean;
-
-  onInputChange?(input: string): void | string | number;
-  onIndexChange?(index: number): void | number;
-  onCommit?(input: string, index: number): void | {input?: string | number, index?: number};
+  
+  onInputChange?(input: string): undefined | string | number;
+  onIndexChange?(index: number): undefined | number;
+  onCommit?(input: string, index: number): undefined | {input?: string | number, index?: number};
   onFilter?(event: React.ChangeEvent<HTMLInputElement>): void;
-
+  
   onCut?(event: React.ClipboardEvent): void;
   onCopy?(event: React.ClipboardEvent): void;
   onPaste?(event: React.ClipboardEvent): void;
