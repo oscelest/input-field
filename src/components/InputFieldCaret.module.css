@@ -1,0 +1,22 @@
+.Component:global(.input-field-caret) {
+  display:         flex;
+  flex:            0 0 auto;
+  align-items:     center;
+  justify-content: center;
+  width:           25px;
+  cursor:          pointer;
+}
+
+.Component:global(.input-field-caret::before) {
+  content:       " ";
+  border-top:    6px solid rgba(0, 0, 0, 0.3);
+  border-left:   6px solid transparent;
+  border-right:  6px solid transparent;
+  border-bottom: none;
+  border-bottom: none;
+  transition:    border-top-color 200ms ease-in-out;
+}
+
+.Component:global(.input-field-caret:hover::before) {
+  border-top-color: rgba(0, 0, 0, 0.7);
+}

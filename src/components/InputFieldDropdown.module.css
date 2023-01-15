@@ -1,0 +1,15 @@
+.Component:global(.input-field-dropdown) {
+  display:          none;
+  flex-flow:        column;
+  position:         absolute;
+  top:              100%;
+  left:             -1px;
+  right:            -1px;
+  z-index:          100;
+  background-color: white;
+  border:           inherit;
+}
+
+.Component:global(.input-field-dropdown[data-active="true"]:not(:empty)) {
+  display: flex;
+}

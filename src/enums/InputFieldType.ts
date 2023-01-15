@@ -1,4 +1,4 @@
-enum InputFieldType {
+export enum InputFieldType {
   TEXT   = "text",
   NUMBER = "number",
   TEL    = "tel",
@@ -6,5 +6,3 @@ enum InputFieldType {
   SEARCH = "search",
   URL    = "url",
 }
-
-export default InputFieldType;
