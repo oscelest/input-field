@@ -6,7 +6,7 @@
 
 /* ----- Layout ----- */
 
-.Component:global(.input-field) {
+.Component {
   display:         flex;
   flex-flow:       column;
   justify-content: center;
@@ -16,12 +16,12 @@
   border:          1px solid black;
 }
 
-.Component:global(.input-field .input-field-container) {
+.Component :global(.input-field-container) {
   display:    flex;
   min-height: calc(var(--input-field-value-font-size) + var(--input-field-label-font-size) + 2px);
 }
 
-.Component:global(.input-field .input-field-content) {
+.Component :global(.input-field-content) {
   display:         flex;
   flex:            1 1 auto;
   flex-flow:       column;
@@ -30,7 +30,7 @@
 
 /* ----- Title ----- */
 
-.Component:global(.input-field .input-field-title) {
+.Component :global(.input-field-title) {
   display:         flex;
   grid-column-gap: 2px;
   font-size:       var(--input-field-label-font-size);
@@ -40,8 +40,15 @@
   user-select:     none;
 }
 
-.Component:global(.input-field[data-active="true"] .input-field-title) {
+.Component:global(.input-field[data-content="true"] .input-field-title),
+.Component:global(.input-field[data-focus="true"] .input-field-title),
+.Component:global(.input-field[data-hover="true"] .input-field-title),
+.Component:global(.input-field[data-error="true"] .input-field-title) {
   font-size: var(--input-field-label-active-font-size);
+}
+
+.Component:global(.input-field[data-content="true"] .input-field-title) {
+  transition: font-size 0ms ease-in-out;
 }
 
 /* ----- Value input field ----- */
@@ -60,12 +67,13 @@
   transition:    height 200ms ease-in-out;
 }
 
-.Component:global(.input-field[data-active="true"] .input-field-value) {
-  height: calc(var(--input-field-label-active-font-size) + 6px);
+.Component:global(.input-field[data-content="true"] .input-field-value) {
+  transition: font-size 0ms ease-in-out;
 }
 
-
-/* ----- Dropdown ----- */
-
-
-/* ----- Dropdown item ----- */
+.Component:global(.input-field[data-content="true"] .input-field-value),
+.Component:global(.input-field[data-focus="true"] .input-field-value),
+.Component:global(.input-field[data-hover="true"] .input-field-value),
+.Component:global(.input-field[data-error="true"] .input-field-value) {
+  height: calc(var(--input-field-label-active-font-size) + 6px);
+}

@@ -26,8 +26,10 @@ export const InputFieldDropdown = React.forwardRef((props: InputFieldDropdownPro
   }
   
   function onComponentMouseLeave(event: React.MouseEvent<HTMLDivElement>) {
-    if (!Utility.handleEventDefault(event, onMouseLeave)) return;
-    onChange(Utility.IndexDefault);
+    onMouseLeave?.(event);
+    if (event.defaultPrevented) return;
+  
+    onChange?.(Utility.IndexDefault);
   }
 });
 

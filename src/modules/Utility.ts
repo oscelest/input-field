@@ -35,9 +35,7 @@ export module Utility {
     return default_value;
   }
   
-  export function parseMinMax(type: InputFieldType.NUMBER, min?: number, max?: number): Pick<HTMLProps<HTMLInputElement>, "min" | "max">
-  export function parseMinMax(type: Omit<InputFieldType, InputFieldType.NUMBER>, min?: number, max?: number): Pick<HTMLProps<HTMLInputElement>, "minLength" | "maxLength">
-  export function parseMinMax(type: InputFieldType, min?: number, max?: number): Pick<HTMLProps<HTMLInputElement>, "min" | "minLength" | "max" | "maxLength"> {
+  export function parseMinMax(type?: InputFieldType, min?: number, max?: number): Pick<HTMLProps<HTMLInputElement>, "min" | "minLength" | "max" | "maxLength"> {
     const result = {} as Pick<HTMLProps<HTMLInputElement>, "min" | "minLength" | "max" | "maxLength">;
     if (min !== undefined) result[type === InputFieldType.NUMBER ? "min" : "minLength"] = min;
     if (max !== undefined) result[type === InputFieldType.NUMBER ? "max" : "maxLength"] = max;

@@ -1,16 +1,18 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {InputField} from "../src";
 
-// const filter = /^\d*$/i;
-
 function IndexPage() {
-  const [value, setValue] = useState<string>("Test");
+  const [value, setValue] = useState<string>();
   const [index, setIndex] = useState<number>(-1);
+  
+  useEffect(() => {
+    setValue("Test");
+  }, []);
   
   return (
     <>
       <div style={{display: "flex"}}>
-        <InputField label={"Hello World"} error={"test"} value={value} index={index} onValueChange={onInputChange} onIndexChange={onIndexChange}>
+        <InputField label={"Hello World"} value={value} index={index} onValueChange={onInputChange} onIndexChange={onIndexChange}>
           <span>Option 1</span>
           <span>Option 2</span>
           <span>Option 3</span>
@@ -18,7 +20,7 @@ function IndexPage() {
         </InputField>
       </div>
       <div style={{display: "flex"}}>
-        <InputField label={"Hello World"} error={"test"} value={value} index={index} onValueChange={onInputChange} onIndexChange={onIndexChange} useCaret={false}>
+        <InputField label={"Hello World"} value={value} index={index} onValueChange={onInputChange} onIndexChange={onIndexChange} useCaret={false}>
           <span>Option 1</span>
           <span>Option 2</span>
           <span>Option 3</span>

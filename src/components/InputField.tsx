@@ -26,8 +26,8 @@ export function InputField<V extends Utility.ValueType>(props: InputFieldProps<V
   const ref_dropdown = useRef<HTMLDivElement>(null);
   
   // Calculate default values
-  if (!Utility.InputTypeValueList.includes(type)) type = InputFieldType.TEXT;
-  if (!label.match(/\w+/)) label = "\u00A0";
+  if (!type || !Utility.InputTypeValueList.includes(type)) type = InputFieldType.TEXT;
+  if (!label?.match(/\w+/)) label = "\u00A0";
   
   // Temporary values
   const current_value = temporary_value ?? value ?? Utility.ValueDefault;
@@ -36,7 +36,6 @@ export function InputField<V extends Utility.ValueType>(props: InputFieldProps<V
   // Calculate dynamic properties
   const children_count = React.Children.count(children);
   const error_message = !disabled ? (error instanceof Error ? error.message : error) : undefined;
-  const is_active = hover || focus || !!current_value || !!error_message;
   const min_max = Utility.parseMinMax(type, min, max);
   const show_caret = useCaret !== undefined ? useCaret : !!children_count && !disabled;
   
@@ -44,7 +43,8 @@ export function InputField<V extends Utility.ValueType>(props: InputFieldProps<V
   if (className) classes.push(className);
   
   return (
-    <div {...component_props} className={classes.join(" ")} data-active={is_active} data-readonly={readonly} data-disabled={disabled}
+    <div {...component_props} className={classes.join(" ")}
+         data-hover={hover} data-focus={focus} data-content={!!current_value} data-error={!!error_message} data-readonly={readonly} data-disabled={disabled}
          onMouseEnter={onComponentMouseEnter} onMouseLeave={onComponentMouseLeave} onFocus={onComponentFocus} onBlur={onComponentBlur}>
       <label className={"input-field-container"}>
         <div className={"input-field-content"}>
@@ -65,14 +65,16 @@ export function InputField<V extends Utility.ValueType>(props: InputFieldProps<V
   );
   
   function onComponentMouseEnter(event: React.MouseEvent<HTMLDivElement>) {
-    if (Utility.handleEventDefault(event, onMouseEnter)) return;
-    
+    onMouseEnter?.(event);
+    if (event.defaultPrevented) return;
+  
     setHover(true);
   }
   
   function onComponentMouseLeave(event: React.MouseEvent<HTMLDivElement>) {
-    if (!Utility.handleEventDefault(event, onMouseLeave)) return;
-    
+    onMouseLeave?.(event);
+    if (event.defaultPrevented) return;
+  
     setHover(false);
   }
   
@@ -112,16 +114,17 @@ export function InputField<V extends Utility.ValueType>(props: InputFieldProps<V
   }
   
   function onDropdownCommit(index: number, element: Element) {
+    setHover(false);
     commit(Utility.getElementText(element), index);
   }
   
   
   function onInputChange({currentTarget: {value}}: React.ChangeEvent<HTMLInputElement>) {
     if (filter && !value.match(filter)) return onFilter?.(value);
-    
-    value = Utility.parseInput(onValueChange(value, false), value);
-    onIndexChange(Utility.getIndexFromInput(value, ref_dropdown.current?.children), false);
-    
+  
+    value = Utility.parseInput(onValueChange?.(value, false), value);
+    onIndexChange?.(Utility.getIndexFromInput(value, ref_dropdown.current?.children), false);
+  
     setDropdown(true);
     setTemporaryValue(undefined);
     setTemporaryIndex(undefined);
@@ -185,10 +188,10 @@ export function InputField<V extends Utility.ValueType>(props: InputFieldProps<V
   
   function commit(value: Utility.ValueType, index: number) {
     value = Utility.parseInput(value);
-    
-    onIndexChange(index, true);
-    onValueChange(value, true);
-    
+  
+    onIndexChange?.(index, true);
+    onValueChange?.(value, true);
+  
     setDropdown(false);
     setTemporaryValue(undefined);
     setTemporaryIndex(undefined);
@@ -221,4 +224,3 @@ export interface InputFieldProps<V extends Utility.ValueType> extends BaseProps 
   onPaste?(event: React.ClipboardEvent): void;
 }
 
-export default InputField;

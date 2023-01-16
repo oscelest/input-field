@@ -8,7 +8,7 @@ export function InputFieldCaret(props: InputFieldCaretProps) {
   if (!show) return null;
   
   const [clicked, setClicked] = useState<boolean>(false);
-  const [state, setState] = useState<boolean>(active);
+  const [state, setState] = useState<boolean>(active ?? false);
   
   const classes = [Style.Component, "input-field-caret"];
   if (className) classes.push(className);
@@ -19,12 +19,14 @@ export function InputFieldCaret(props: InputFieldCaretProps) {
   
   function onComponentMouseDown(event: React.MouseEvent<HTMLDivElement>) {
     if (!Utility.handleEventDefault(event, onMouseDown)) return;
+  
     setClicked(true);
     setState(!active);
   }
   
   function onComponentMouseUp(event: React.MouseEvent<HTMLDivElement>) {
     if (!Utility.handleEventDefault(event, onMouseUp, !clicked)) return;
+  
     setClicked(false);
     onChange?.(state);
   }

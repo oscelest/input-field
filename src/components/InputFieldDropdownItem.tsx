@@ -18,17 +18,21 @@ export function InputFieldDropdownItem(props: InputFieldDropdownItemProps) {
   );
   
   function onComponentMouseEnter(event: React.MouseEvent<HTMLDivElement>) {
-    if (!Utility.handleEventDefault(event, onMouseEnter)) return;
+    onMouseEnter?.(event);
+    if (event.defaultPrevented) return;
+  
     onChange?.(index, event.currentTarget);
   }
   
   function onComponentMouseDown(event: React.MouseEvent<HTMLDivElement>) {
     if (!Utility.handleEventDefault(event, onMouseDown, event.button !== 0)) return;
+  
     setClicked(true);
   }
   
   function onComponentMouseUp(event: React.MouseEvent<HTMLDivElement>) {
     if (!Utility.handleEventDefault(event, onMouseUp, event.button !== 0 || !clicked)) return;
+  
     setClicked(false);
     onCommit?.(index, event.currentTarget);
   }
@@ -41,6 +45,6 @@ export interface InputFieldDropdownItemProps extends BaseProps {
   index: number;
   active?: boolean;
   
-  onChange?(index: number, element: Element);
+  onChange?(index: number, element: Element): void;
   onCommit?(index: number, element: Element): void;
 }
