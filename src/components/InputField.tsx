@@ -35,9 +35,9 @@ export function InputField<V extends Utility.ValueType>(props: InputFieldProps<V
   
   // Calculate dynamic properties
   const children_count = React.Children.count(children);
-  const error_message = !disabled ? (error instanceof Error ? error.message : error) : undefined;
+  const error_message = Utility.getErrorMessage(error, disabled);
   const min_max = Utility.parseMinMax(type, min, max);
-  const show_caret = useCaret !== undefined ? useCaret : !!children_count && !disabled;
+  const show_caret = Utility.getShowCaret(useCaret, children_count, disabled);
   
   const classes = [Style.Component, "input-field"];
   if (className) classes.push(className);

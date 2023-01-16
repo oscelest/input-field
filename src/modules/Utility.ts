@@ -6,7 +6,6 @@ export module Utility {
   export const InputTypeValueList = Object.values(InputFieldType);
   export const IndexDefault = -1;
   export const ValueDefault = "";
-  export const DropdownDefault = "";
   
   export type ValueType = HTMLProps<HTMLInputElement>["value"]
   
@@ -15,7 +14,7 @@ export module Utility {
     DOWN = 1,
   }
   
-  export function handleEventDefault<E extends React.SyntheticEvent>(event: E, event_handler?: EventHandler<E>, exit_condition?: boolean) {
+  export function handleEventDefault<E extends React.SyntheticEvent>(event: E, event_handler?: EventHandler<E>, exit_condition?: boolean): boolean {
     event_handler?.(event);
     if (event.defaultPrevented || exit_condition) return false;
     
@@ -23,15 +22,20 @@ export module Utility {
     return true;
   }
   
+  export function getErrorMessage(error?: string | Error, disabled?: boolean): string {
+    if (!error || disabled) return "";
+    if (error instanceof Error) return error.message;
+    return String(error);
+  }
+  
+  export function getShowCaret(use_caret?: boolean, count?: number, disabled?: boolean): boolean {
+    return use_caret !== false && !!count && !disabled;
+  }
+  
   export function parseInput<V extends ValueType | void>(value: V, default_value: string = ValueDefault): string {
     if (typeof value === "string") return value;
     if (typeof value === "number") return isNaN(value) ? ValueDefault : String(value);
     if (Array.isArray(value)) return value.join(",");
-    return default_value;
-  }
-  
-  export function parseIndex<T>(value: T, default_value: number = IndexDefault): number {
-    if (typeof value === "number") return isNaN(value) ? default_value : Math.max(IndexDefault, value);
     return default_value;
   }
   
@@ -75,13 +79,4 @@ export module Utility {
   export function getElementText(element?: Element | null) {
     return element?.textContent ?? "";
   }
-  
-  export function getIndexOfElement(parent: Element, element: Element) {
-    return Array.prototype.indexOf.call(parent.children, element);
-  }
-  
-  export function validateUpdate<T>(value: T | undefined, fn: (v: T) => void) {
-    if (value !== undefined) fn(value);
-  }
-  
 }
