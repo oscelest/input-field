@@ -122,7 +122,7 @@ export function InputField<V extends Utility.ValueType>(props: InputFieldProps<V
   function onInputChange({currentTarget: {value}}: React.ChangeEvent<HTMLInputElement>) {
     if (filter && !value.match(filter)) return onFilter?.(value);
   
-    value = Utility.parseInput(onValueChange?.(value, false), value);
+    onValueChange?.(value, false);
     onIndexChange?.(Utility.getIndexFromInput(value, ref_dropdown.current?.children), false);
   
     setDropdown(true);
@@ -215,8 +215,8 @@ export interface InputFieldProps<V extends Utility.ValueType> extends BaseProps 
   filter?: RegExp;
   useCaret?: boolean;
   
-  onValueChange?(input: string, commit: boolean): void | V;
-  onIndexChange?(index: number, commit: boolean): void | number;
+  onValueChange?(input: string, commit: boolean): void;
+  onIndexChange?(index: number, commit: boolean): void;
   onFilter?(value: string): void;
   
   onCut?(event: React.ClipboardEvent): void;
