@@ -8,57 +8,56 @@
 /* ----- Layout ----- */
 
 .Component {
-  display:   flex;
-  flex-flow: column;
-  position:  relative;
+  display:   flex !important;
+  flex-flow: column !important;
+  position:  relative !important;
   padding:   2px 4px;
   border:    1px solid black;
 }
 
 .Component :global(.input-field-container) {
-  display:    flex;
-  min-height: calc(var(--input-field-value-font-size) + var(--input-field-label-font-size) + 2px);
+  display:    flex !important;
+  min-height: calc(var(--input-field-value-font-size) + var(--input-field-label-font-size) + 2px) !important;
 }
 
 .Component :global(.input-field-content) {
-  display:         flex;
-  flex:            1 1 auto;
-  flex-flow:       column;
-  justify-content: center;
+  display:         flex !important;
+  flex-flow:       column !important;
+  justify-content: center !important;
 }
 
 /* ----- Title ----- */
 
 .Component :global(.input-field-title) {
-  display:         flex;
+  display:         flex !important;
+  flex-flow:       row !important;
   grid-column-gap: 2px;
-  font-size:       var(--input-field-label-font-size);
-  line-height:     var(--input-field-label-font-size);
+  font-size:       var(--input-field-label-font-size) !important;
+  line-height:     var(--input-field-label-font-size) !important;
   transition:      font-size 200ms ease-in-out;
   cursor:          text;
   user-select:     none;
 }
 
-.Component:global(.input-field[data-content="true"] .input-field-title),
-.Component:global(.input-field[data-focus="true"] .input-field-title),
-.Component:global(.input-field[data-hover="true"] .input-field-title),
-.Component:global(.input-field[data-error="true"] .input-field-title) {
-  font-size: var(--input-field-label-active-font-size);
+.Component[data-content="true"] :global(.input-field-title),
+.Component[data-focus="true"] :global(.input-field-title),
+.Component[data-hover="true"] :global(.input-field-title) {
+  font-size: var(--input-field-label-active-font-size) !important;
 }
 
-.Component:global(.input-field[data-content="true"] .input-field-title) {
+.Component[data-content="true"] :global(.input-field-title) {
   transition: font-size 0ms ease-in-out;
 }
 
 /* ----- Value input field ----- */
 
 .Component :global(.input-field-value) {
-  width:         100%;
-  height:        0;
+  width:         100% !important;
+  height:        0 !important;
   padding:       0;
   margin-bottom: -1px;
-  font-size:     var(--input-field-value-font-size);
-  line-height:   var(--input-field-value-font-size);
+  font-size:     var(--input-field-value-font-size) !important;
+  line-height:   var(--input-field-value-font-size) !important;
   font-family:   inherit;
   background:    transparent;
   border:        none;
@@ -66,13 +65,12 @@
   transition:    height 200ms ease-in-out;
 }
 
-.Component:global(.input-field[data-content="true"] .input-field-value) {
+.Component[data-content="true"] :global(.input-field-value) {
   transition: font-size 0ms ease-in-out;
 }
 
-.Component:global(.input-field[data-content="true"] .input-field-value),
-.Component:global(.input-field[data-focus="true"] .input-field-value),
-.Component:global(.input-field[data-hover="true"] .input-field-value),
-.Component:global(.input-field[data-error="true"] .input-field-value) {
-  height: calc(var(--input-field-label-active-font-size) + 6px);
+.Component[data-content="true"] :global(.input-field-value),
+.Component[data-focus="true"] :global(.input-field-value),
+.Component[data-hover="true"] :global(.input-field-value) {
+  height: calc(var(--input-field-label-active-font-size) + 6px) !important;
 }
