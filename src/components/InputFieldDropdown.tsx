@@ -8,11 +8,12 @@ export const InputFieldDropdown = React.forwardRef((props: InputFieldDropdownPro
   const {onMouseLeave, onChange, onCommit, ...component_props} = component_method_props;
   if (!React.Children.count(children)) return null;
   
+  const active = show && !!React.Children.count(children);
   const classes = [Style.Component, "input-field-dropdown"];
   if (className) classes.push(className);
   
   return (
-    <div ref={ref} {...component_props} className={classes.join(" ")} data-active={show} onMouseLeave={onComponentMouseLeave}>
+    <div ref={ref} {...component_props} className={classes.join(" ")} data-active={active} onMouseLeave={onComponentMouseLeave}>
       {React.Children.map(children, renderItem)}
     </div>
   );

@@ -1,8 +1,6 @@
-.Component:global(.input-field-dropdown-item) {
-  box-sizing: border-box;
-  padding:    4px;
-  background: transparent;
-  cursor:     pointer;
+.Component {
+  padding: 4px;
+  cursor:  pointer;
 }
 
 .Component:global(.input-field-dropdown-item[data-active="true"]) {

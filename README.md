@@ -70,12 +70,12 @@ The error text that will be displayed at the bottom of the component. If left em
 
 The type of input field to be used with the following available values:
 
-- InputFieldType.TEXT   ("text")
-- InputFieldType.NUMBER ("number")
-- InputFieldType.TEL    ("tel")
-- InputFieldType.EMAIL  ("email")
-- InputFieldType.SEARCH ("search")
-- InputFieldType.URL    ("url")
+- `InputFieldType.TEXT` or `"text"`
+- `InputFieldType.NUMBER` or `"number"`
+- `InputFieldType.TEL` or `"tel"`
+- `InputFieldType.EMAIL` or `"email"`
+- `InputFieldType.SEARCH` or `"search"`
+- `InputFieldType.URL` or `"url"`
 
 **Default value**: `InputFieldType.TEXT`
 
@@ -157,6 +157,18 @@ A callback that will be called whenever user input changes the value of the Inpu
 Whenever the user performs an action that will "commit" the value, like pressing enter, pressing tab, selecting a dropdown item, the `commit` value inside the callback will be true.
 
 ## Styling
+
+### CSS Variables
+
+The following variables are used to control the font sizes of the label and input elements, depending on active and inactive states.
+
+```css
+:root .input-field {
+  --input-field-value-font-size:        16px;
+  --input-field-label-font-size:        16px;
+  --input-field-label-active-font-size: 12px;
+}
+```
 
 ```css
 .input-field {

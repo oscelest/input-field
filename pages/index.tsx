@@ -20,7 +20,7 @@ function IndexPage() {
         </InputField>
       </div>
       <div style={{display: "flex"}}>
-        <InputField label={"Hello World"} value={value} index={index} onValueChange={onInputChange} onIndexChange={onIndexChange} useCaret={false}>
+        <InputField label={"Hello World"} error={"Some error here"} value={value} index={index} onValueChange={onInputChange} onIndexChange={onIndexChange} useCaret={false}>
           <span>Option 1</span>
           <span>Option 2</span>
           <span>Option 3</span>

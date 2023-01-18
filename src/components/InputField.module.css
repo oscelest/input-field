@@ -2,18 +2,17 @@
   --input-field-value-font-size:        16px;
   --input-field-label-font-size:        16px;
   --input-field-label-active-font-size: 12px;
+  --input-field-caret-size:             6px;
 }
 
 /* ----- Layout ----- */
 
 .Component {
-  display:         flex;
-  flex-flow:       column;
-  justify-content: center;
-  box-sizing:      border-box;
-  position:        relative;
-  padding:         2px 4px;
-  border:          1px solid black;
+  display:   flex;
+  flex-flow: column;
+  position:  relative;
+  padding:   2px 4px;
+  border:    1px solid black;
 }
 
 .Component :global(.input-field-container) {
@@ -53,7 +52,7 @@
 
 /* ----- Value input field ----- */
 
-.Component:global(.input-field .input-field-value) {
+.Component :global(.input-field-value) {
   width:         100%;
   height:        0;
   padding:       0;

@@ -1,7 +1,4 @@
-.Component:global(.input-field-error) {
-  box-sizing:  border-box;
-  color:       red;
-  white-space: break-spaces;
-  word-break:  break-word;
-  border-top:  1px solid rgba(0, 0, 0, 0.5);
+.Component {
+  color:      red;
+  border-top: 1px solid rgba(0, 0, 0, 0.5);
 }

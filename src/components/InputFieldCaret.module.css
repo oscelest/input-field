@@ -1,20 +1,19 @@
 .Component:global(.input-field-caret) {
-  display:         flex;
-  flex:            0 0 auto;
-  align-items:     center;
-  justify-content: center;
+  display:         flex !important;
+  align-items:     center !important;
+  justify-content: center !important;
   width:           25px;
   cursor:          pointer;
 }
 
 .Component:global(.input-field-caret::before) {
-  content:       " ";
-  border-top:    6px solid rgba(0, 0, 0, 0.3);
-  border-left:   6px solid transparent;
-  border-right:  6px solid transparent;
-  border-bottom: none;
-  border-bottom: none;
-  transition:    border-top-color 200ms ease-in-out;
+  content:          " " !important;
+  border-top-width: var(--input-field-caret-size) !important;
+  border-top-style: solid !important;
+  border-top-color: rgba(0, 0, 0, 0.3);
+  border-left:      var(--input-field-caret-size) solid transparent !important;
+  border-right:     var(--input-field-caret-size) solid transparent !important;
+  transition:       border-top-color 200ms ease-in-out;
 }
 
 .Component:global(.input-field-caret:hover::before) {
