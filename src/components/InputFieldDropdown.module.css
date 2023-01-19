@@ -1,4 +1,4 @@
-.Component:global(.input-field-dropdown) {
+.Component {
   display:          none;
   flex-flow:        column !important;
   position:         absolute !important;

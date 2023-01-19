@@ -158,21 +158,100 @@ Whenever the user performs an action that will "commit" the value, like pressing
 
 ## Styling
 
+While the styling of this component is minimalist, the following section documents editable variables and properties which should not be edited.
+
 ### CSS Variables
 
 The following variables are used to control the font sizes of the label and input elements, depending on active and inactive states.
 
 ```css
 :root .input-field {
-  --input-field-value-font-size:        16px;
-  --input-field-label-font-size:        16px;
-  --input-field-label-active-font-size: 12px;
+  --input-field-input-font-size:        16px; /* The font-size of the input element */
+  --input-field-label-font-size:        16px; /* The font-size of the label element when the input field is inactive */
+  --input-field-label-active-font-size: 12px; /* The font-size of the label element when the input field is active */
+  --input-field-caret-size:             6px; /* The size of the caret when it's being shown */
 }
 ```
 
+### Important CSS Properties
+
+The following are a list of properties which are designated as important.
+To preserve component functionality, these should not be changed.
+If you do need to change them however, please be advised that the component might stop working as intended.
+
 ```css
 .input-field {
+  display:   flex !important;
+  flex-flow: column !important;
+  position:  relative !important;
+}
 
+.input-field-container {
+  display:    flex !important;
+  min-height: calc(var(--input-field-input-font-size) + var(--input-field-label-font-size) + 2px) !important;
+}
+
+.input-field-content {
+  display:         flex !important;
+  flex-flow:       column !important;
+  justify-content: center !important;
+}
+
+.input-field-title {
+  display:     flex !important;
+  flex-flow:   row !important;
+  font-size:   var(--input-field-label-font-size) !important;
+  line-height: var(--input-field-label-font-size) !important;
+}
+
+.input-field .input-field-title,
+.input-field .input-field-title,
+.input-field .input-field-title {
+  font-size: var(--input-field-label-active-font-size) !important;
+}
+
+.input-field-title {
+  transition: font-size 0ms ease-in-out;
+}
+
+.input-field-value {
+  width:       100% !important;
+  height:      0 !important;
+  font-size:   var(--input-field-input-font-size) !important;
+  line-height: var(--input-field-input-font-size) !important;
+}
+
+.input-field[data-content="true"] .input-field-value,
+.input-field[data-focus="true"] .input-field-value,
+.input-field[data-hover="true"] .input-field-value {
+  height: calc(var(--input-field-label-active-font-size) + 6px) !important;
+}
+
+.input-field-caret {
+  display:         flex !important;
+  align-items:     center !important;
+  justify-content: center !important;
+}
+
+.input-field-caret::before {
+  content:          " " !important;
+  border-top-width: var(--input-field-caret-size) !important;
+  border-top-style: solid !important;
+  border-left:      var(--input-field-caret-size) solid transparent !important;
+  border-right:     var(--input-field-caret-size) solid transparent !important;
+}
+
+.input-field-dropdown {
+  flex-flow: column !important;
+  position:  absolute !important;
+  top:       100% !important;
+  left:      -1px !important;
+  right:     -1px !important;
+  z-index:   100 !important;
+}
+
+.input-field-dropdown[data-active="true"] {
+  display: flex !important;
 }
 ```
 

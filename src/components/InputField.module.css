@@ -1,5 +1,5 @@
 :root .Component {
-  --input-field-value-font-size:        16px;
+  --input-field-input-font-size:        16px;
   --input-field-label-font-size:        16px;
   --input-field-label-active-font-size: 12px;
   --input-field-caret-size:             6px;
@@ -17,7 +17,7 @@
 
 .Component :global(.input-field-container) {
   display:    flex !important;
-  min-height: calc(var(--input-field-value-font-size) + var(--input-field-label-font-size) + 2px) !important;
+  min-height: calc(var(--input-field-input-font-size) + var(--input-field-label-font-size) + 2px) !important;
 }
 
 .Component :global(.input-field-content) {
@@ -56,8 +56,8 @@
   height:        0 !important;
   padding:       0;
   margin-bottom: -1px;
-  font-size:     var(--input-field-value-font-size) !important;
-  line-height:   var(--input-field-value-font-size) !important;
+  font-size:     var(--input-field-input-font-size) !important;
+  line-height:   var(--input-field-input-font-size) !important;
   font-family:   inherit;
   background:    transparent;
   border:        none;

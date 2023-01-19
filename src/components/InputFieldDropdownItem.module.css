@@ -3,7 +3,7 @@
   cursor:  pointer;
 }
 
-.Component:global(.input-field-dropdown-item[data-active="true"]) {
+.Component[data-active="true"] {
   color:      HighlightText;
   background: Highlight;
 }
