@@ -7,13 +7,14 @@
 }
 
 .Component::before {
-  content:          " " !important;
-  border-top-width: var(--input-field-caret-size) !important;
-  border-top-style: solid !important;
-  border-top-color: rgba(0, 0, 0, 0.3);
-  border-left:      var(--input-field-caret-size) solid transparent !important;
-  border-right:     var(--input-field-caret-size) solid transparent !important;
-  transition:       border-top-color 200ms ease-in-out;
+  content:            " " !important;
+  border-width:       6px;
+  border-style:       solid !important;
+  border-top-color:   rgba(0, 0, 0, 0.3);
+  border-left-color:  transparent !important;
+  border-right-color: transparent !important;
+  border-bottom:      none !important;
+  transition:         border-top-color 200ms ease-in-out;
 }
 
 .Component:hover::before {

@@ -197,20 +197,20 @@ If you do need to change them however, please be advised that the component migh
   justify-content: center !important;
 }
 
-.input-field-title {
+.input-field-label {
   display:     flex !important;
   flex-flow:   row !important;
   font-size:   var(--input-field-label-font-size) !important;
   line-height: var(--input-field-label-font-size) !important;
 }
 
-.input-field .input-field-title,
-.input-field .input-field-title,
-.input-field .input-field-title {
+.input-field .input-field-label,
+.input-field .input-field-label,
+.input-field .input-field-label {
   font-size: var(--input-field-label-active-font-size) !important;
 }
 
-.input-field-title {
+.input-field-label {
   transition: font-size 0ms ease-in-out;
 }
 
@@ -234,11 +234,11 @@ If you do need to change them however, please be advised that the component migh
 }
 
 .input-field-caret::before {
-  content:          " " !important;
-  border-top-width: var(--input-field-caret-size) !important;
-  border-top-style: solid !important;
-  border-left:      var(--input-field-caret-size) solid transparent !important;
-  border-right:     var(--input-field-caret-size) solid transparent !important;
+  content:            " " !important;
+  border-style:       solid !important;
+  border-left-color:  transparent !important;
+  border-right-color: transparent !important;
+  border-bottom:      none !important;
 }
 
 .input-field-dropdown {

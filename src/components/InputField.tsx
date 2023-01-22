@@ -11,7 +11,7 @@ import {InputFieldRequired} from "./InputFieldRequired";
 export function InputField<V extends Utility.ValueType>(props: InputFieldProps<V>) {
   // External properties
   let {type, value, index, label, min, max, error, filter, useCaret, children, className, autoComplete, autoFocus, readonly, required, disabled, name, ...component_method_props} = props;
-  let {onValueChange, onIndexChange, onCut, onCopy, onPaste, onFilter, onMouseUp, onMouseEnter, onMouseLeave, onFocus, onBlur, ...component_props} = component_method_props;
+  let {onValueChange, onIndexChange, onFilter, onCut, onCopy, onPaste, onMouseUp, onMouseEnter, onMouseLeave, onFocus, onBlur, ...component_props} = component_method_props;
   
   // States to check how component should be rendered
   const [hover, setHover] = useState<boolean>(false);
@@ -48,7 +48,7 @@ export function InputField<V extends Utility.ValueType>(props: InputFieldProps<V
          onMouseEnter={onComponentMouseEnter} onMouseLeave={onComponentMouseLeave} onFocus={onComponentFocus} onBlur={onComponentBlur}>
       <label className={"input-field-container"}>
         <div className={"input-field-content"}>
-          <div className={"input-field-title"}>
+          <div className={"input-field-label"}>
             <InputFieldRequired>*</InputFieldRequired>
             <FlexEllipsisText>{label}</FlexEllipsisText>
           </div>
