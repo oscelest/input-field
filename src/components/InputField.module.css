@@ -5,13 +5,12 @@
   flex-flow: column !important;
   position:  relative !important;
   padding:   2px 4px;
-  font-size: 16px;
   border:    1px solid black;
 }
 
 .Component :global(.input-field-container) {
   display: flex !important;
-  height:  34px;
+  height:  30px;
 }
 
 .Component :global(.input-field-content) {
@@ -25,9 +24,9 @@
 .Component :global(.input-field-label) {
   display:         flex !important;
   flex-flow:       row !important;
+  align-items:     center;
   grid-column-gap: 2px;
-  font-size:       18px !important;
-  line-height:     18px !important;
+  font-size:       18px;
   transition:      font-size 200ms ease-in-out;
   cursor:          text;
   user-select:     none;
@@ -36,7 +35,7 @@
 .Component[data-content="true"] :global(.input-field-label),
 .Component[data-focus="true"] :global(.input-field-label),
 .Component[data-hover="true"] :global(.input-field-label) {
-  font-size: 12px !important;
+  font-size: 12px;
 }
 
 .Component[data-content="true"] :global(.input-field-label) {
@@ -47,10 +46,9 @@
 
 .Component :global(.input-field-value) {
   width:       100% !important;
-  height:      0 !important;
+  height:      0;
   padding:     0;
-  font-size:   16px !important;
-  line-height: 16px !important;
+  font-size:   16px;
   font-family: inherit;
   background:  transparent;
   border:      none;
@@ -65,5 +63,5 @@
 .Component[data-content="true"] :global(.input-field-value),
 .Component[data-focus="true"] :global(.input-field-value),
 .Component[data-hover="true"] :global(.input-field-value) {
-  height: 60% !important;
+  height: 100%;
 }
