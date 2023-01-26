@@ -146,10 +146,29 @@ onFilter?(value: string): void;
 
 A callback that will be called whenever an input gets filtered away through the `filter` property.
 
-### onValueChange(value: string, commit: boolean): void
+### onChange(event: InputFieldChangeEvent): void
 
-A callback that will be called whenever user input changes the value of the Input element.
-Whenever the user performs an action that will "commit" the value, like pressing enter, pressing tab, selecting a dropdown item, the `commit` value inside the callback will be true.
+A callback that will be called whenever the value of the input is changed, reset, or committed.
+
+- `change` - Whenever a user writes anything into the input field.
+- `commit` - Whenever a user presses enter, tab, or selects an item from the dropdown.
+- `reset` - Whenever a user presses escape with the input field in focus.
+
+####  
+
+```ts
+interface InputFieldChangeEvent {
+  type: InputFieldEventType;
+  index: number;
+  value: string;
+}
+
+enum InputFieldEventType {
+  CHANGE = "change",
+  COMMIT = "commit",
+  RESET  = "reset",
+}
+```
 
 ### onIndexChange(value: number, commit: boolean): void
 
@@ -187,8 +206,7 @@ If you do need to change them however, please be advised that the component migh
 }
 
 .input-field-container {
-  display:    flex !important;
-  min-height: calc(var(--input-field-input-font-size) + var(--input-field-label-font-size) + 2px) !important;
+  display: flex !important;
 }
 
 .input-field-content {
@@ -198,33 +216,23 @@ If you do need to change them however, please be advised that the component migh
 }
 
 .input-field-label {
-  display:     flex !important;
-  flex-flow:   row !important;
-  font-size:   var(--input-field-label-font-size) !important;
-  line-height: var(--input-field-label-font-size) !important;
-}
-
-.input-field .input-field-label,
-.input-field .input-field-label,
-.input-field .input-field-label {
-  font-size: var(--input-field-label-active-font-size) !important;
+  display:   flex !important;
+  flex-flow: row !important;
 }
 
 .input-field-label {
-  transition: font-size 0ms ease-in-out;
+  transition: font-size 0ms ease-in-out !important;
 }
 
 .input-field-value {
-  width:       100% !important;
-  height:      0 !important;
-  font-size:   var(--input-field-input-font-size) !important;
-  line-height: var(--input-field-input-font-size) !important;
+  width:  100% !important;
+  height: 0 !important;
 }
 
 .input-field[data-content="true"] .input-field-value,
 .input-field[data-focus="true"] .input-field-value,
 .input-field[data-hover="true"] .input-field-value {
-  height: calc(var(--input-field-label-active-font-size) + 6px) !important;
+  height: 100% !important;
 }
 
 .input-field-caret {
@@ -242,12 +250,12 @@ If you do need to change them however, please be advised that the component migh
 }
 
 .input-field-dropdown {
+  display:   none !important;
   flex-flow: column !important;
   position:  absolute !important;
   top:       100% !important;
   left:      -1px !important;
   right:     -1px !important;
-  z-index:   100 !important;
 }
 
 .input-field-dropdown[data-active="true"] {

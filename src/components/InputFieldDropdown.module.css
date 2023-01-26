@@ -1,11 +1,11 @@
 .Component {
-  display:          none;
+  display:          none !important;
   flex-flow:        column !important;
   position:         absolute !important;
   top:              100% !important;
   left:             -1px !important;
   right:            -1px !important;
-  z-index:          100 !important;
+  z-index:          100;
   background-color: white;
   border:           inherit;
 }
