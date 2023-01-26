@@ -262,7 +262,3 @@ If you do need to change them however, please be advised that the component migh
   display: flex !important;
 }
 ```
-
-## Notice
-
-This is currently not in a v1.0.0 release. Undocumented breaking changes might happen between versions.
