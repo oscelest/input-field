@@ -1,18 +1,14 @@
-import React, {useEffect, useState} from "react";
+import React, {useState} from "react";
 import {InputField, InputFieldChangeEvent} from "../src";
 
 function IndexPage() {
-  const [value, setValue] = useState<string>();
-  const [index, setIndex] = useState<number>(-1);
-  
-  useEffect(() => {
-    setValue("Test");
-  }, []);
+  const [value, setValue] = useState<string>("Option 1");
+  const [index, setIndex] = useState<number>(0);
   
   return (
     <>
       <div style={{display: "flex"}}>
-        <InputField label={"Hello World"} value={value} index={index} onChange={onChange}>
+        <InputField label={"Hello World"} value={value} index={index} strict={true} onChange={onChange}>
           <span>Option 1</span>
           <span>Option 2</span>
           <span>Option 3</span>
@@ -25,6 +21,11 @@ function IndexPage() {
           <span>Option 2</span>
           <span>Option 3</span>
           <span>Option 4</span>
+        </InputField>
+      </div>
+      <div style={{display: "flex"}}>
+        <InputField label={"No options"} value={value} index={index} onChange={onChange} useCaret={true}>
+          {[]}
         </InputField>
       </div>
     </>

@@ -6,15 +6,19 @@ import {InputFieldDropdownItem} from "./InputFieldDropdownItem";
 export const InputFieldDropdown = React.forwardRef((props: InputFieldDropdownProps, ref: React.Ref<HTMLDivElement>) => {
   const {show, index, children, className, ...component_method_props} = props;
   const {onMouseLeave, onChange, onCommit, ...component_props} = component_method_props;
-  if (!React.Children.count(children)) return null;
+  if (!children) return null;
   
-  const active = show && !!React.Children.count(children);
+  const active = show && !!children;
   const classes = [Style.Component, "input-field-dropdown"];
   if (className) classes.push(className);
   
   return (
     <div ref={ref} {...component_props} className={classes.join(" ")} data-active={active} onMouseLeave={onComponentMouseLeave}>
-      {React.Children.map(children, renderItem)}
+      {
+        React.Children.count(children)
+        ? React.Children.map(children, renderItem)
+        : renderEmpty()
+      }
     </div>
   );
   
@@ -26,10 +30,18 @@ export const InputFieldDropdown = React.forwardRef((props: InputFieldDropdownPro
     );
   }
   
+  function renderEmpty() {
+    return (
+      <span className={"input-dropdown-placeholder"}>
+        No options
+      </span>
+    );
+  }
+  
   function onComponentMouseLeave(event: React.MouseEvent<HTMLDivElement>) {
     onMouseLeave?.(event);
     if (event.defaultPrevented) return;
-  
+    
     onChange?.(Utility.IndexDefault);
   }
 });

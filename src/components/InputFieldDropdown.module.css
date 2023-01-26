@@ -13,3 +13,10 @@
 .Component[data-active="true"] {
   display: flex !important;
 }
+
+.Component :global(.input-dropdown-placeholder) {
+  padding:     4px;
+  color:       #7d7d7d;
+  font-style:  italic;
+  user-select: none;
+}

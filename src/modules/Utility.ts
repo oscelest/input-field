@@ -12,7 +12,7 @@ export module Utility {
   export function handleEventDefault<E extends React.SyntheticEvent>(event: E, event_handler?: EventHandler<E>, exit_condition?: boolean): boolean {
     event_handler?.(event);
     if (event.defaultPrevented || exit_condition) return false;
-    
+  
     event.preventDefault();
     return true;
   }
@@ -23,8 +23,8 @@ export module Utility {
     return String(error);
   }
   
-  export function getShowCaret(use_caret?: boolean, count?: number, disabled?: boolean): boolean {
-    return use_caret !== false && !!count && !disabled;
+  export function getShowCaret(use_caret?: boolean, children?: React.ReactNode, disabled?: boolean): boolean {
+    return use_caret !== false && !!children && !disabled;
   }
   
   export function parseValue(value: any, default_value: string = ValueDefault): string {
