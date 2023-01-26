@@ -132,6 +132,14 @@ Instead, an onFilter event will be fired.
 
 **Default value**: `undefined`
 
+### strict: boolean
+
+Strict mode only works if `InputField` component has children.
+In strict mode, if the value does not correspond with an option present in the list of children, then a reset event is fired rather than a commit event.
+Use strict mode if you're wanting to emulate a select dropdown rather than an input.
+
+**Default value**: `undefined`
+
 ### useCaret: boolean
 
 Determines if the caret for the dropdown should be shown.
