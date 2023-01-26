@@ -1,6 +1,6 @@
 import {FlexEllipsisText} from "@noxy/react-flex-ellipsis-text";
 import React, {HTMLProps, useRef, useState} from "react";
-import {InputFieldType} from "../enums";
+import {InputFieldEventType, InputFieldType, OffsetDirectionType} from "../enums";
 import {Utility} from "../modules/Utility";
 import Style from "./InputField.module.css";
 import {InputFieldCaret} from "./InputFieldCaret";
@@ -11,16 +11,18 @@ import {InputFieldRequired} from "./InputFieldRequired";
 export function InputField<V extends Utility.ValueType>(props: InputFieldProps<V>) {
   // External properties
   let {type, value, index, label, min, max, error, filter, useCaret, children, className, autoComplete, autoFocus, readonly, required, disabled, name, ...component_method_props} = props;
-  let {onValueChange, onIndexChange, onFilter, onCut, onCopy, onPaste, onMouseUp, onMouseEnter, onMouseLeave, onFocus, onBlur, ...component_props} = component_method_props;
+  let {onFilter, onChange, onCut, onCopy, onPaste, onMouseUp, onMouseEnter, onMouseLeave, onFocus, onBlur, ...component_props} = component_method_props;
   
   // States to check how component should be rendered
   const [hover, setHover] = useState<boolean>(false);
   const [focus, setFocus] = useState<boolean>(false);
   const [dropdown, setDropdown] = useState<boolean>(false);
   
-  // States to keep track of values hovered in the dropdown
-  const [temporary_value, setTemporaryValue] = useState<string>();
-  const [temporary_index, setTemporaryIndex] = useState<number>();
+  // States to keep track of values that either temporary or needs to be reverted to
+  const [committedValue, setCommitValue] = useState<string>(Utility.parseValue(value));
+  const [committedIndex, setCommitIndex] = useState<number>(Utility.parseIndex(index));
+  const [temporaryValue, setTemporaryValue] = useState<string>();
+  const [temporaryIndex, setTemporaryIndex] = useState<number>();
   
   // Ref for dropdown element
   const ref_dropdown = useRef<HTMLDivElement>(null);
@@ -30,8 +32,8 @@ export function InputField<V extends Utility.ValueType>(props: InputFieldProps<V
   if (!label?.match(/\w+/)) label = "\u00A0";
   
   // Temporary values
-  const current_value = temporary_value ?? value ?? Utility.ValueDefault;
-  const current_index = temporary_index ?? index ?? Utility.IndexDefault;
+  const current_value = Utility.parseValue(temporaryValue ?? value);
+  const current_index = Utility.parseIndex(temporaryIndex ?? index);
   
   // Calculate dynamic properties
   const children_count = React.Children.count(children);
@@ -118,12 +120,10 @@ export function InputField<V extends Utility.ValueType>(props: InputFieldProps<V
     commit(Utility.getElementText(element), index);
   }
   
-  
   function onInputChange({currentTarget: {value}}: React.ChangeEvent<HTMLInputElement>) {
     if (filter && !value.match(filter)) return onFilter?.(value);
   
-    onValueChange?.(value, false);
-    onIndexChange?.(Utility.getIndexFromInput(value, ref_dropdown.current?.children), false);
+    onChange?.(createEvent(value, Utility.getIndexFromInput(value, ref_dropdown.current?.children), InputFieldEventType.CHANGE));
   
     setDropdown(true);
     setTemporaryValue(undefined);
@@ -133,10 +133,10 @@ export function InputField<V extends Utility.ValueType>(props: InputFieldProps<V
   function onInputKeyDown(event: React.KeyboardEvent) {
     switch (event.code) {
       case "ArrowUp":
-        handleKeydownArrowKey(Utility.offsetIndex(current_index, Utility.OffsetDirection.UP, children_count));
+        handleKeydownArrowKey(Utility.offsetIndex(current_index, OffsetDirectionType.UP, children_count));
         break;
       case "ArrowDown":
-        handleKeydownArrowKey(Utility.offsetIndex(current_index, Utility.OffsetDirection.DOWN, children_count));
+        handleKeydownArrowKey(Utility.offsetIndex(current_index, OffsetDirectionType.DOWN, children_count));
         break;
       case "Escape":
         handleKeydownEscape();
@@ -154,7 +154,7 @@ export function InputField<V extends Utility.ValueType>(props: InputFieldProps<V
   }
   
   function handleKeydownEscape() {
-    handleKeyCommit(value);
+    reset();
   }
   
   function handleKeydownArrowKey(index: number) {
@@ -178,28 +178,46 @@ export function InputField<V extends Utility.ValueType>(props: InputFieldProps<V
     if (dropdown && current_index > Utility.IndexDefault) {
       return commit(Utility.getInputFromIndex(current_index, ref_dropdown.current?.children), current_index);
     }
-    
+  
     handleKeyCommit(current_value);
   }
   
   function handleKeyCommit(value: Utility.ValueType) {
-    commit(value, Utility.getIndexFromInput(Utility.parseInput(value), ref_dropdown.current?.children));
+    commit(value, Utility.getIndexFromInput(Utility.parseValue(value), ref_dropdown.current?.children));
   }
   
-  function commit(value: Utility.ValueType, index: number) {
-    value = Utility.parseInput(value);
-  
-    onIndexChange?.(index, true);
-    onValueChange?.(value, true);
-  
+  function reset() {
+    onChange?.(createEvent(committedValue, committedIndex, InputFieldEventType.RESET));
     setDropdown(false);
     setTemporaryValue(undefined);
     setTemporaryIndex(undefined);
   }
+  
+  function commit(value: Utility.ValueType, index: number) {
+    value = Utility.parseValue(value);
+    index = Utility.parseIndex(index);
+    
+    onChange?.(createEvent(value, index, InputFieldEventType.COMMIT));
+    setDropdown(false);
+    setTemporaryValue(undefined);
+    setTemporaryIndex(undefined);
+    setCommitIndex(index);
+    setCommitValue(value);
+  }
+  
+  function createEvent(value: string, index: number, type: InputFieldEventType): InputFieldChangeEvent {
+    return {value, index, type};
+  }
 }
 
 type BaseProps = Omit<HTMLProps<HTMLDivElement>, keyof BaseOmittedProps>
-type BaseOmittedProps = Pick<HTMLProps<HTMLDivElement>, "minLength" | "maxLength">
+type BaseOmittedProps = Pick<HTMLProps<HTMLDivElement>, "minLength" | "maxLength" | "onChange">
+
+export interface InputFieldChangeEvent {
+  type: InputFieldEventType;
+  index: number;
+  value: string;
+}
 
 export interface InputFieldProps<V extends Utility.ValueType> extends BaseProps {
   min?: number;
@@ -215,8 +233,7 @@ export interface InputFieldProps<V extends Utility.ValueType> extends BaseProps 
   filter?: RegExp;
   useCaret?: boolean;
   
-  onValueChange?(input: string, commit: boolean): void;
-  onIndexChange?(index: number, commit: boolean): void;
+  onChange?(event: InputFieldChangeEvent): void;
   onFilter?(value: string): void;
   
   onCut?(event: React.ClipboardEvent): void;

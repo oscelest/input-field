@@ -1,18 +1,13 @@
 import React, {EventHandler, HTMLProps} from "react";
-import {InputFieldType} from "../enums";
+import {InputFieldType, OffsetDirectionType} from "../enums";
 
 export module Utility {
+  
+  export type ValueType = HTMLProps<HTMLInputElement>["value"];
   
   export const InputTypeValueList = Object.values(InputFieldType);
   export const IndexDefault = -1;
   export const ValueDefault = "";
-  
-  export type ValueType = HTMLProps<HTMLInputElement>["value"]
-  
-  export enum OffsetDirection {
-    UP   = -1,
-    DOWN = 1,
-  }
   
   export function handleEventDefault<E extends React.SyntheticEvent>(event: E, event_handler?: EventHandler<E>, exit_condition?: boolean): boolean {
     event_handler?.(event);
@@ -32,10 +27,16 @@ export module Utility {
     return use_caret !== false && !!count && !disabled;
   }
   
-  export function parseInput<V extends ValueType | void>(value: V, default_value: string = ValueDefault): string {
+  export function parseValue(value: any, default_value: string = ValueDefault): string {
     if (typeof value === "string") return value;
     if (typeof value === "number") return isNaN(value) ? ValueDefault : String(value);
     if (Array.isArray(value)) return value.join(",");
+    return default_value;
+  }
+  
+  export function parseIndex(value: any, default_value: number = IndexDefault): number {
+    if (isNaN(value)) return IndexDefault;
+    if (typeof value === "number") return Math.max(IndexDefault, value);
     return default_value;
   }
   
@@ -46,11 +47,11 @@ export module Utility {
     return result;
   }
   
-  export function offsetIndex(current: number, offset: OffsetDirection, max: number) {
-    if (offset === OffsetDirection.UP && current <= 0) {
+  export function offsetIndex(current: number, offset: OffsetDirectionType, max: number) {
+    if (offset === OffsetDirectionType.UP && current <= 0) {
       return max - 1;
     }
-    if (offset === OffsetDirection.DOWN && current >= max - 1) {
+    if (offset === OffsetDirectionType.DOWN && current >= max - 1) {
       return 0;
     }
     return current + offset;
