@@ -8,7 +8,7 @@ function IndexPage() {
   return (
     <>
       <div style={{display: "flex"}}>
-        <InputField label={"Hello World"} value={value} index={index} strict={true} onChange={onChange}>
+        <InputField label={"Hello World"} value={value} index={index} strict={true} required={true} onChange={onChange}>
           <span>Option 1</span>
           <span>Option 2</span>
           <span>Option 3</span>

@@ -2,9 +2,9 @@ import React, {HTMLProps} from "react";
 import Style from "./InputFieldRequired.module.css";
 
 export function InputFieldRequired(props: InputFieldRequiredProps) {
-  const {children, className, ...component_method_props} = props;
+  const {children, className, show, ...component_method_props} = props;
   const {onMouseDown, onClick, onChange, ...component_props} = component_method_props;
-  if (!children) return null;
+  if (!children || !show) return null;
   
   const classes = [Style.Component, "input-field-required"];
   if (className) classes.push(className);
@@ -15,5 +15,6 @@ export function InputFieldRequired(props: InputFieldRequiredProps) {
 }
 
 export interface InputFieldRequiredProps extends HTMLProps<HTMLDivElement> {
+  show?: boolean;
   children?: string;
 }

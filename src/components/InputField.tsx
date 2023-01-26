@@ -51,11 +51,11 @@ export function InputField<V extends Utility.ValueType>(props: InputFieldProps<V
       <label className={"input-field-container"}>
         <div className={"input-field-content"}>
           <div className={"input-field-label"}>
-            <InputFieldRequired>*</InputFieldRequired>
+            <InputFieldRequired show={required}>*</InputFieldRequired>
             <FlexEllipsisText>{label}</FlexEllipsisText>
           </div>
           <input {...min_max} className={"input-field-value"} value={current_value} type={type}
-                 autoComplete={autoComplete} autoFocus={autoFocus} name={name} readOnly={readonly} disabled={disabled}
+                 autoComplete={autoComplete} autoFocus={autoFocus} name={name} readOnly={readonly} disabled={disabled} required={required}
                  onKeyDown={onInputKeyDown} onChange={onInputChange} onCut={onCut} onCopy={onCopy} onPaste={onPaste}/>
         </div>
         <InputFieldCaret show={show_caret} active={dropdown} onChange={setDropdown}/>
