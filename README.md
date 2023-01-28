@@ -208,8 +208,6 @@ If you do need to change them however, please be advised that the component migh
 
 ```css
 .input-field {
-  display:   flex !important;
-  flex-flow: column !important;
   position:  relative !important;
 }
 
