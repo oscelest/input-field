@@ -1,11 +1,10 @@
 /* ----- Layout ----- */
 
 .Component {
-  display:   flex !important;
-  flex-flow: column !important;
-  position:  relative !important;
-  padding:   2px 4px;
-  border:    1px solid black;
+  box-sizing: border-box;
+  position:   relative !important;
+  padding:    2px 4px;
+  border:     1px solid black;
 }
 
 .Component :global(.input-field-container) {
