@@ -187,19 +187,6 @@ Whenever the user performs an action that will "commit" the value, like pressing
 
 While the styling of this component is minimalist, the following section documents editable variables and properties which should not be edited.
 
-### CSS Variables
-
-The following variables are used to control the font sizes of the label and input elements, depending on active and inactive states.
-
-```css
-:root .input-field {
-  --input-field-input-font-size:        16px; /* The font-size of the input element */
-  --input-field-label-font-size:        16px; /* The font-size of the label element when the input field is inactive */
-  --input-field-label-active-font-size: 12px; /* The font-size of the label element when the input field is active */
-  --input-field-caret-size:             6px; /* The size of the caret when it's being shown */
-}
-```
-
 ### Important CSS Properties
 
 The following are a list of properties which are designated as important.

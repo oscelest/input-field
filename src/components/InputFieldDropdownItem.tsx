@@ -1,5 +1,5 @@
 import React, {HTMLProps, useState} from "react";
-import {Utility} from "../modules/Utility";
+import {Utility} from "../modules";
 import Style from "./InputFieldDropdownItem.module.css";
 
 export function InputFieldDropdownItem(props: InputFieldDropdownItemProps) {

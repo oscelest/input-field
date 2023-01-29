@@ -1,7 +1,7 @@
 import {FlexEllipsisText} from "@noxy/react-flex-ellipsis-text";
 import React, {HTMLProps, useRef, useState} from "react";
 import {InputFieldEventType, InputFieldType, OffsetDirectionType} from "../enums";
-import {Utility} from "../modules/Utility";
+import {Utility} from "../modules";
 import Style from "./InputField.module.css";
 import {InputFieldCaret} from "./InputFieldCaret";
 import {InputFieldDropdown} from "./InputFieldDropdown";
