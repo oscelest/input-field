@@ -23,7 +23,7 @@ The following is an example of how to use the component:
 
 ```typescript jsx
 import React, {HTMLProps, useState} from "react";
-import {InputField} from "@noxy/react-input-field";
+import {InputField, InputFieldChangeEvent} from "@noxy/react-input-field";
 
 function TestComponent(props: HTMLProps<HTMLDivElement>) {
   const [error, setError] = useState<Error>();
@@ -32,19 +32,16 @@ function TestComponent(props: HTMLProps<HTMLDivElement>) {
   
   return (
     <InputField label={"Hello World"} value={vaue} index={index} error={error}
-                onValueChange={onValueChange} onIndexChange={onIndexChange}>
+                onChange={onValueChange}>
       <div {...props}>
         Hello World
       </div>
     </InputField>
   );
   
-  function onValueChange(index: number, commit: boolean) {
-    setValue(value);
-  }
-  
-  function onIndexChange(index: number, commit: boolean) {
-    setIndex(index);
+  function onChange(event: InputFieldChangeEvent) {
+    setValue(event.value);
+    setIndex(event.index);
   }
 }
 ```

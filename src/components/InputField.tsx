@@ -168,7 +168,7 @@ export function InputField<V extends Utility.ValueType>(props: InputFieldProps<V
   
   function handleKeydownEnter() {
     // If we have a children object
-    if (children && !dropdown) {
+    if (children !== undefined && !dropdown) {
       return setDropdown(true);
     }
     
@@ -176,7 +176,7 @@ export function InputField<V extends Utility.ValueType>(props: InputFieldProps<V
   }
   
   function handleKeydown() {
-    if (children) {
+    if (children !== undefined) {
       if (current_index > Utility.IndexDefault) {
         return commit(Utility.getInputFromIndex(current_index, ref_dropdown.current?.children), current_index);
       }
