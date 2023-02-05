@@ -1,5 +1,5 @@
 import {FlexEllipsisText} from "@noxy/react-flex-ellipsis-text";
-import React, {HTMLProps, useRef, useState} from "react";
+import React, {DetailedHTMLProps, HTMLAttributes, useRef, useState} from "react";
 import {InputFieldEventType, InputFieldType, OffsetDirectionType} from "../enums";
 import {Utility} from "../modules";
 import Style from "./InputField.module.css";
@@ -8,7 +8,7 @@ import {InputFieldDropdown} from "./InputFieldDropdown";
 import {InputFieldError} from "./InputFieldError";
 import {InputFieldRequired} from "./InputFieldRequired";
 
-export function InputField<V extends Utility.ValueType>(props: InputFieldProps<V>) {
+export function InputField(props: InputFieldProps) {
   // External properties
   let {type, value, index, label, min, max, error, filter, strict, useCaret, children, className, autoComplete, autoFocus, readonly, required, disabled, name, ...component_method_props} = props;
   let {onFilter, onChange, onCut, onCopy, onPaste, onMouseUp, onMouseEnter, onMouseLeave, onFocus, onBlur, ...component_props} = component_method_props;
@@ -218,23 +218,27 @@ export function InputField<V extends Utility.ValueType>(props: InputFieldProps<V
   }
 }
 
-type BaseProps = Omit<HTMLProps<HTMLDivElement>, keyof BaseOmittedProps>
-type BaseOmittedProps = Pick<HTMLProps<HTMLDivElement>, "minLength" | "maxLength" | "onChange">
-
 export interface InputFieldChangeEvent {
   type: InputFieldEventType;
   index: number;
   value: string;
 }
 
-export interface InputFieldProps<V extends Utility.ValueType> extends BaseProps {
+type HTMLComponentProps = DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>
+
+export interface InputFieldProps extends Omit<HTMLComponentProps, "minLength" | "maxLength" | "onChange"> {
   min?: number;
   max?: number;
   readonly?: boolean;
   required?: boolean;
+  disabled?: boolean;
   
+  
+  name?: string;
+  autoComplete?: string;
+  autoFocus?: boolean;
   index?: number;
-  value?: V;
+  value?: Utility.ValueType;
   error?: string | Error;
   type?: InputFieldType;
   label?: string;
