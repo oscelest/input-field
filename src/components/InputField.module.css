@@ -9,11 +9,12 @@
 
 .Component :global(.input-field-container) {
   display: flex !important;
-  height:  30px;
+  height:  36px;
 }
 
 .Component :global(.input-field-content) {
   display:         flex !important;
+  flex:            1 1 auto;
   flex-flow:       column !important;
   justify-content: center !important;
 }

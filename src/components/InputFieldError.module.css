@@ -1,6 +1,6 @@
 .Component {
-  padding-top: 2px;
-  color:       red;
-  font-size:   12px;
-  border-top:  1px solid rgba(0, 0, 0, 0.5);
+  margin-top: 2px;
+  border-top: 1px solid rgba(0, 0, 0, 0.5);
+  color:      red;
+  font-size:  12px;
 }
