@@ -1,6 +1,7 @@
 import {FlexEllipsisText} from "@noxy/react-flex-ellipsis-text";
-import React, {DetailedHTMLProps, HTMLAttributes, useRef, useState} from "react";
+import React, {useRef, useState} from "react";
 import {InputFieldEventType, InputFieldType, OffsetDirectionType} from "../enums";
+import {HTMLComponentProps, InputFieldChangeEvent, InputFieldValue} from "../index";
 import {Utility} from "../modules";
 import Style from "./InputField.module.css";
 import {InputFieldCaret} from "./InputFieldCaret";
@@ -193,7 +194,7 @@ export function InputField(props: InputFieldProps) {
     closeDropdown();
   }
   
-  function commit(value: Utility.ValueType, index: number) {
+  function commit(value: InputFieldValue, index: number) {
     value = Utility.parseValue(value);
     index = Utility.parseIndex(index);
     
@@ -218,13 +219,6 @@ export function InputField(props: InputFieldProps) {
   }
 }
 
-export interface InputFieldChangeEvent {
-  type: InputFieldEventType;
-  index: number;
-  value: string;
-}
-
-type HTMLComponentProps = DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>
 
 export interface InputFieldProps extends Omit<HTMLComponentProps, "minLength" | "maxLength" | "onChange"> {
   min?: number;
@@ -238,7 +232,7 @@ export interface InputFieldProps extends Omit<HTMLComponentProps, "minLength" | 
   autoComplete?: string;
   autoFocus?: boolean;
   index?: number;
-  value?: Utility.ValueType;
+  value?: InputFieldValue;
   error?: string | Error;
   type?: InputFieldType;
   label?: string;

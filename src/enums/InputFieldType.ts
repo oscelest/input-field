@@ -1,8 +1,9 @@
 export enum InputFieldType {
-  TEXT   = "text",
-  NUMBER = "number",
-  TEL    = "tel",
-  EMAIL  = "email",
-  SEARCH = "search",
-  URL    = "url",
+  TEXT     = "text",
+  PASSWORD = "password",
+  NUMBER   = "number",
+  TEL      = "tel",
+  EMAIL    = "email",
+  SEARCH   = "search",
+  URL      = "url",
 }

@@ -3,8 +3,6 @@ import {InputFieldType, OffsetDirectionType} from "../enums";
 
 export module Utility {
   
-  export type ValueType = HTMLProps<HTMLInputElement>["value"];
-  
   export const InputTypeValueList = Object.values(InputFieldType);
   export const IndexDefault = -1;
   export const ValueDefault = "";
