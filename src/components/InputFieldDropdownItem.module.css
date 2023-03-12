@@ -4,6 +4,6 @@
 }
 
 .Component[data-active="true"] {
-  color:      HighlightText;
   background: Highlight;
+  color:      HighlightText;
 }

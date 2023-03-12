@@ -6,8 +6,8 @@
   left:             -1px !important;
   right:            -1px !important;
   z-index:          100;
-  background-color: white;
   border:           inherit;
+  background-color: white;
 }
 
 .Component[data-active="true"] {

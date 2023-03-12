@@ -1,8 +1,8 @@
 /* ----- Layout ----- */
 
 .Component {
-  box-sizing: border-box;
   position:   relative !important;
+  box-sizing: border-box;
   padding:    2px 4px;
   border:     1px solid black;
 }
@@ -48,10 +48,10 @@
   width:       100% !important;
   height:      0 !important;
   padding:     0;
+  border:      none;
+  background:  transparent;
   font-size:   16px;
   font-family: inherit;
-  background:  transparent;
-  border:      none;
   outline:     none;
   transition:  height 200ms ease-in-out;
 }
