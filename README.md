@@ -159,7 +159,7 @@ A callback that will be called whenever the value of the input is changed, reset
 - `commit` - Whenever a user presses enter, tab, or selects an item from the dropdown.
 - `reset` - Whenever a user presses escape with the input field in focus.
 
-####    
+####      
 
 ```ts
 interface InputFieldChangeEvent {
